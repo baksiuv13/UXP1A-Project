@@ -14,11 +14,11 @@ Uruchamiany program będzie interfejsem do biblioteki, która będzie udostępni
 
 Wymagania funkcjonalne:
 
-podłączenie się procesu do pamięci współdzielonej
-odłączenie się procedury od pamięci współdzielonej
-realizacja funkcji input - umieszczenie krotki w przestrzeni krotek
-realizacja funkcji output - atomowe pobranie i usunięcie krotki z przestrzeni (wg wzorca)
-realizacja funkcji read - pobieranie lecz nie usuwa krotki z przestrzeni krotek
+- podłączenie się procesu do pamięci współdzielonej
+- odłączenie się procedury od pamięci współdzielonej
+- realizacja funkcji input - umieszczenie krotki w przestrzeni krotek
+- realizacja funkcji output - atomowe pobranie i usunięcie krotki z przestrzeni (wg wzorca)
+- realizacja funkcji read - pobieranie lecz nie usuwa krotki z przestrzeni krotek
 
 ## 3. Krótki opis funkcjonalny - “black-box” - proponowane API
 
