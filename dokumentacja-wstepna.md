@@ -8,7 +8,7 @@ Przestrzeń krotek będzie realizowana przy pomocy pamięci dzielonej i semafor�
 
 ## 2. Interpretacja treści zadania i wymagania funkcjonalne
 
-Celem projektu jest zrealizowanie komunikacji między-procesowej w języku Linda. Końcowym efektem będzie możliwość uruchomienia kilku procesów (wykorzystując np: kilka terminali) i realizacja wyżej wymienionego celu. Przykładowo, na jednym terminalu wpisujemy krotkę A(operacja output). Następnie na drugim terminalu zadajemy zadanie read o kryteriach które spełnia krotka A. Drugi terminal zwróci wartość krotki A.
+Celem projektu jest zrealizowanie komunikacji między-procesowej w języku Linda. Końcowym efektem będzie możliwość uruchomienia kilku procesów (wykorzystując np.: kilka terminali) i realizacja wyżej wymienionego celu. Przykładowo, na jednym terminalu wpisujemy krotkę A (operacja output). Następnie na drugim terminalu zadajemy zadanie read o kryteriach które spełnia krotka A. Drugi terminal zwróci wartość krotki A.
 
 Uruchamiany program będzie interfejsem do biblioteki, która będzie udostępniać operacje realizowane przez język Linda (output, input, read).
 
