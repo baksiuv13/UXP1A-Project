@@ -30,7 +30,7 @@ Elementy krotki to struktury składające się z informacji o typie (enum) i war
 
 Elementu opisu oczekiwanej krotki to struktury składające się z informacji o typie (enum) oraz rodzaju warunku (enum) i wartości (union).
 
-Elementy krotki mogą być różnej długości, te z liczbami mają stałą długość, natomiast krotki z napisami mają dowolną długość mieszcząca się w krotce razem z innymi elementami. Koniec napisu jest oznaczony znakiem ‘\0’, a następny element po nim jest wyrównany do wielokrotności 4 bajtów.
+Elementy krotki mogą być różnej długości, te z liczbami mają stałą długość, natomiast krotki z napisami mają dowolną długość mieszczącą się w krotce razem z innymi elementami. Koniec napisu jest oznaczony znakiem '\0', a następny element po nim jest wyrównany do wielokrotności 4 bajtów.
 
 Destruktor obiektu realizuje odłączenie się od pamięci współdzielonej.
 
