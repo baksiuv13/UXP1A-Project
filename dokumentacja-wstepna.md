@@ -82,6 +82,10 @@ krotka{
 
 ## 7. Sytuacje krytyczne i nietypowe
 
-Zamykanie pamięci: kiedy ostatni proces zdecyduje się zamknąć pamięć, to przed zwolnieniem pamięci jakiś proces może próbować się dostać.
+##### Zamykanie pamięci
 
-Zagłodzenia procesów - istnieje możliwość zagłodzenia procesu, który próbuje dokonać funkcji output. Sytuacja taka nastąpi w momencie w którym proces próbuje znaleźć dla siebie krotkę, nie znajdzie jej, zostanie wstawiony na koniec kolejki oczekujących pisarzy, po czym inny proces doda krotkę która pasuje do jego wzorca a jeszcze następny proces ją pobierze. W wymienionej tu sytuacji krotkę pasującą do wzorca otrzyma ten proces, który być może później zgłosił swoje żądanie znalezienia krotki, a proces zgłaszający się wcześniej może zostać zagłodzony. Sytuacji tej możnaby uniknąć w ten sposób, że po dodaniu krotki, wszystkie procesy oczekujące z funkcją output musiałyby po kolei wg czasu swojego pierwszego zgłoszenia przeglądać nowo dodane krotki. To mogłoby bardzo znacząco obciążyć cały nasz system i spowodować niepotrzebny narzut czasowy, aby uniknąć skrajnej sytuacji zagłodzenia.
+Kiedy ostatni proces zdecyduje się zamknąć pamięć, to przed zwolnieniem pamięci jakiś proces może próbować się dostać.
+
+##### Zagłodzenia procesów
+
+Istnieje możliwość zagłodzenia procesu, który próbuje dokonać funkcji output. Sytuacja taka nastąpi w momencie w którym proces próbuje znaleźć dla siebie krotkę, nie znajdzie jej, zostanie wstawiony na koniec kolejki oczekujących pisarzy, po czym inny proces doda krotkę która pasuje do jego wzorca a jeszcze następny proces ją pobierze. W wymienionej tu sytuacji krotkę pasującą do wzorca otrzyma ten proces, który być może później zgłosił swoje żądanie znalezienia krotki, a proces zgłaszający się wcześniej może zostać zagłodzony. Sytuacji tej możnaby uniknąć w ten sposób, że po dodaniu krotki, wszystkie procesy oczekujące z funkcją output musiałyby po kolei wg czasu swojego pierwszego zgłoszenia przeglądać nowo dodane krotki. To mogłoby bardzo znacząco obciążyć cały nasz system i spowodować niepotrzebny narzut czasowy, aby uniknąć skrajnej sytuacji zagłodzenia.
