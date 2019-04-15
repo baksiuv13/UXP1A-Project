@@ -76,7 +76,7 @@ struct element_opis {
 };
 
 krotka{
-  element table[rozmiar_calosci];
+  alignas(int32_t) char[rozmiar_calosci];
 };
 ```
 
