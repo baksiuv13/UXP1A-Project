@@ -44,9 +44,9 @@ Zadanie zostanie rozwiązane jako problem czytelników i pisarzy w wariancie nie
 
 ## 6. Zarys koncepcji implementacji (najważniejsze funkcje, algorytmy, obiekty komunikacyjne, itp.)
 
-* segment pamięci współdzielonej alokowany przez pierwszy włączony program i zwalniany przez ostatni wyłączony,
-* semafor nadzorujący, ile programów używa pamięci, program, który ją tworzy ustawia na jeden, podłączające zwiększają ją o jeden, a każdy, który odłącza się od pamięci, próbuje opuścić semafor bez blokowania i jeśli nie może, to znaczy, że był ostatni i zamyka tę pamięć
-* blokada będąca muteksem czytelników i pisarzy
+- segment pamięci współdzielonej alokowany przez pierwszy włączony program i zwalniany przez ostatni wyłączony,
+- semafor nadzorujący, ile programów używa pamięci, program, który ją tworzy ustawia na jeden, podłączające zwiększają ją o jeden, a każdy, który odłącza się od pamięci, próbuje opuścić semafor bez blokowania i jeśli nie może, to znaczy, że był ostatni i zamyka tę pamięć
+- blokada będąca muteksem czytelników i pisarzy
 
 ```C++
 struct element {
