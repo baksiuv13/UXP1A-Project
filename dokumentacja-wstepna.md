@@ -75,7 +75,7 @@ struct element_opis {
   };
 };
 
-krotka{
+struct krotka {
   alignas(int32_t) char a[rozmiar_calosci];
 };
 ```
