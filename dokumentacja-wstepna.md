@@ -40,7 +40,7 @@ Pierwszy proces rezerwuje pamięć współdzieloną i tworzy semafory. Następne
 
 ### Koncepcja realizacji współbieżności
 
-Zadanie zostanie rozwiązane jako problem czytelników i pisarzy w wariancie nie powodującym zagłodzenia żadnego z typu procesów. Czytelnikami w naszym przypadku będą procesy wykonujące operację read. Pisarzami będą procesy wykonujące operacje input oraz output. [Rozwiązanie wzorcowe.](https://en.wikipedia.org/wiki/Readers%E2%80%93writers_problem#Third_readers-writers_problem)
+Zadanie zostanie rozwiązane jako problem czytelników i pisarzy w wariancie nie powodującym zagłodzenia żadnego z typu procesów. Czytelnikami w naszym przypadku będą procesy wykonujące operację read. Pisarzami będą procesy wykonujące operacje input oraz output. Rozwiązanie wzorcowe: <https://en.wikipedia.org/wiki/Readers%E2%80%93writers_problem#Third_readers-writers_problem>
 
 ## 6. Zarys koncepcji implementacji (najważniejsze funkcje, algorytmy, obiekty komunikacyjne, itp.)
 
