@@ -16,7 +16,6 @@ class Linda {
 
   struct Element {
     Type type;
-    int16_t empty;
     union {
       int32_t int_;
       float float_;
