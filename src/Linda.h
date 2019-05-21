@@ -16,6 +16,7 @@ class Linda {
 
   struct Element {
     Type type;
+    size_t str_size;
     union {
       int32_t int_;
       float float_;
@@ -32,6 +33,7 @@ class Linda {
       GREATER_EQ,  // >=
       EQUAL        // ==
     };
+    size_t str_size;
     union {
       int32_t int_;
       float float_;
