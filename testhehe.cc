@@ -25,7 +25,20 @@ int main(int argc, char **argv, char **env) {
 
   std::cerr << getpid() << '\n';
 
-  // uxp::MemoryChunk mc;
+  uxp::MemoryChunk mc;
+
+  mc.AttachNew("./haha", 666);
+
+  if (!mc.IsOpen()) {
+    std::cerr << "Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
+    return -666;
+  }
+
+  memset(mc.GetMem(), 'x', 665);
+  reinterpret_cast<char *>(mc.GetMem())[665] = '\0';
+
+  std::cerr << reinterpret_cast<char *>(mc.GetMem());
+
 
 
   return 0;
