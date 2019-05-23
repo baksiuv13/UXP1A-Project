@@ -53,9 +53,9 @@ MemoryChunk::~MemoryChunk() {
 int MemoryChunk::CreateNewMem_(const char *path, size_t size) {
   assert(state_ == BLANK);
 
-  int shm_key = ftok(path, PROJ_ID);
-  int sem_key = ftok(path, SEM_PROJ_ID);
-  if (shm_key < 0 || sem_key < 0)
+  key_t shm_key = ftok(path, SHM_PROJ_ID);
+  key_t sem_key = ftok(path, SEM_PROJ_ID);
+  if (static_cast<int>(shm_key) < 0 || static_cast<int>(sem_key) < 0)
     return -1;
   int shm_id = shmget(shm_key, size, IPC_CREAT | IPC_EXCL | 0660);
   if (shm_id < 0) {
@@ -98,9 +98,9 @@ int MemoryChunk::CreateNewMem_(const char *path, size_t size) {
 int MemoryChunk::AttachNotNew_(const char *path) {
   assert(state_ == BLANK);
 
-  int shm_key = ftok(path, PROJ_ID);
-  int sem_key = ftok(path, SEM_PROJ_ID);
-  if (shm_key < 0)
+  key_t shm_key = ftok(path, SHM_PROJ_ID);
+  key_t sem_key = ftok(path, SEM_PROJ_ID);
+  if (static_cast<int>(shm_key) < 0 || static_cast<int>(sem_key) < 0)
     return -1;
   int shm_id = shmget(shm_key, 0, 0);
   if (shm_id < 0) {

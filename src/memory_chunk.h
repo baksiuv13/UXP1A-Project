@@ -17,9 +17,7 @@ class MemoryChunk {
   };
   // static constexpr struct CREATE_t {} CREATE {};
 
-  static constexpr size_t MEMORY_SIZE = 64 * 1024;
-  static constexpr int PROJ_ID = 112;
-  static constexpr int SEM_PROJ_ID = 113;
+  // static constexpr size_t MEMORY_SIZE = 64 * 1024;
 
   MemoryChunk();
   explicit MemoryChunk(const char *path);
@@ -41,9 +39,10 @@ class MemoryChunk {
   int AttachNew(const char *path, size_t size);
   void Detach();
 
-
-
  private:
+  static constexpr int SHM_PROJ_ID = 1;
+  static constexpr int SEM_PROJ_ID = 2;
+
   int CreateNewMem_(const char *path, size_t size);
   int AttachNotNew_(const char *path);
   void Close_();

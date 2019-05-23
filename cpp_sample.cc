@@ -1,4 +1,4 @@
-// Copyright 2019 Ktoś
+// Copyright 2019 UXP1A Students Team
 
 #include <unistd.h>
 
