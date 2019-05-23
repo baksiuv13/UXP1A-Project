@@ -1,7 +1,15 @@
-// Copyright 2019 Ktoś
+// Copyright 2019 UXP1A Students Team
 
 #include <unistd.h>
+
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/shm.h>
+
+#include <cstring>
 #include <iostream>
+
+#include "src/memory_chunk.h"
 
 static int fn(int a) {
   return a + 6;
@@ -14,5 +22,11 @@ int main(int argc, char **argv, char **env) {
     x -= fn(x);
   }
   std::cout << "x = " << x << '\n';  // albo std::endl ale nie wiem
+
+  std::cerr << getpid() << '\n';
+
+  // uxp::MemoryChunk mc;
+
+
   return 0;
 }
