@@ -38,6 +38,7 @@ class MemoryChunk {
   int Attach(const char *path);
   int AttachNew(const char *path, size_t size);
   void Detach();
+  char &operator[](size_t);
 
  private:
   static constexpr int SHM_PROJ_ID = 1;

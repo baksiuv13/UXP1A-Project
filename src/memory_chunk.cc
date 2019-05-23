@@ -179,4 +179,10 @@ void MemoryChunk::Detach() {
   return Close_();
 }
 
+char &MemoryChunk::operator[](size_t i) {
+  return IsOpen() ?
+    static_cast<char *>(GetMem())[i] :
+    *static_cast<char *>(nullptr);
+}
+
 }  // namespace uxp
