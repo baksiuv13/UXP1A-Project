@@ -54,9 +54,9 @@ class Linda {
   Linda();
   explicit Linda(int memory_identifier);
 
-  void output(Tuple tuple);
-  Tuple input(TupleDesc describe, unsigned int timeout_ms);
-  Tuple read(TupleDesc describe, unsigned int timeout_ms);
+  void Output(Tuple tuple);
+  Tuple Input(TupleDesc describe, unsigned int timeout_ms);
+  Tuple Read(TupleDesc describe, unsigned int timeout_ms);
 };
 
 }  // namespace uxp
