@@ -66,3 +66,8 @@ _deps
 
 # End of https://www.gitignore.io/api/c++,cmake,visualstudiocode
 build/
+
+BACKUP/
+.DS_Store
+.vscode/
+main.*.

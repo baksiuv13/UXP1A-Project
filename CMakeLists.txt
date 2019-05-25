@@ -26,11 +26,11 @@ add_executable(linda
   "${SOURCES_src}"
 )
 
-add_executable(testhehe
-  testhehe.cc
+add_executable(main
+  main.cc
   "${SOURCES_src}"
 )
 
 #target_link_libraries(linda
-#  
+#
 #)
