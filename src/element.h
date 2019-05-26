@@ -1,7 +1,7 @@
 // Copyright 2019 UXP1A Students Team
 
-#ifndef UXP1A_PROJECT_ELEMENT_H
-#define UXP1A_PROJECT_ELEMENT_H
+#ifndef SRC_ELEMENT_H_
+#define SRC_ELEMENT_H_
 
 #include <cstdint>
 #include <cstdlib>
@@ -13,7 +13,6 @@ namespace uxp {
 
 using Type = ElemType;
 
-constexpr size_t TUPLES_NUMBER = 100;
 constexpr size_t MAX_STRING_SIZE = 200;
 
 struct Element {
@@ -44,6 +43,9 @@ struct ElementDesc {
   } value;
 };
 
-} // namespace uxp
+bool ChkElem(const Element *, const ElementDesc *);
 
-#endif //UXP1A_PROJECT_ELEMENT_H
+
+}  // namespace uxp
+
+#endif  // SRC_ELEMENT_H_

@@ -1,12 +1,11 @@
 set(SOURCES
   "${CMAKE_CURRENT_SOURCE_DIR}/memory_chunk.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/memory_chunk.cc"
-  "${CMAKE_CURRENT_SOURCE_DIR}/Linda.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/Linda.cc"
+  "${CMAKE_CURRENT_SOURCE_DIR}/linda.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/linda.cc"
   "${CMAKE_CURRENT_SOURCE_DIR}/type.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/parser.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/Tuple.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/Tuple.cc"
-  "${CMAKE_CURRENT_SOURCE_DIR}/Element.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/Element.cc"
+  "${CMAKE_CURRENT_SOURCE_DIR}/tuple.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/tuple.cc"
+  "${CMAKE_CURRENT_SOURCE_DIR}/element.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/element.cc"
 )

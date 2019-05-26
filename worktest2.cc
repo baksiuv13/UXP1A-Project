@@ -10,7 +10,7 @@
 #include <cstring>
 #include <iostream>
 
-#include "src/Linda.h"
+#include "src/linda.h"
 
 static constexpr const char *filename = "./shm-test-file";
 
