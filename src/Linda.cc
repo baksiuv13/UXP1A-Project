@@ -70,6 +70,7 @@ void Linda::Output(Linda::Tuple tuple) {
 
   // Only for debug;
   Tuple *tuples = &TupleAt_(0);
+  (void)tuples;
 
   size_t i;
   for (i = 0; i < TUPLES_NUMBER; ++i) {
