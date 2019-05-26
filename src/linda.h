@@ -14,6 +14,12 @@
 
 namespace uxp {
 
+struct Semaphore{ // TODO remove it when we prepare our implementation of semaphores
+  void p(){};
+  void v(){};
+  bool equalZero(){};
+};
+
 class Linda {
  public:
   static constexpr size_t TUPLES_NUMBER = 100;
@@ -65,6 +71,7 @@ class Linda {
   Tuple *Find_(const TupleDesc &describe);
 
   MemoryChunk mc_;
+  Semaphore serviceQueue, resourceAccess, readCountAccess, readCount; //TODO reimplement by using our semaphores
 };
 
 }  // namespace uxp
