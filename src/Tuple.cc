@@ -75,4 +75,4 @@ bool ChkElem(const Element *e, const ElementDesc *ed) {
   }
 }
 
-} // namespace uxp
+}  // namespace uxp

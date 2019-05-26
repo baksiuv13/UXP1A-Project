@@ -31,6 +31,6 @@ void TupleGen_(const std::string &, bool desc, void *dest);
 bool ChkTuple(const Tuple *, const TupleDesc *);
 bool ChkElem(const Element *, const ElementDesc *);
 
-} // namespace uxp
+}  // namespace uxp
 
 #endif //UXP1A_PROJECT_TUPLE_H

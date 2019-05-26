@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(UXP1A-Project CXX)
 
+include(CTest)
+enable_testing()
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -19,6 +22,8 @@ add_subdirectory(src)
 get_directory_property(
   SOURCES_src DIRECTORY src DEFINITION SOURCES
 )
+add_subdirectory(tests)
+
 
 add_executable(linda
   cpp_sample.cc
