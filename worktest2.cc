@@ -86,7 +86,6 @@ int inne(int argc, char **argv, char **env) {
 }
 
 int main(int argc, char **argv, char **env) {
-
   std::cerr << getpid() << '\n';
 
   return inne(argc, argv, env);

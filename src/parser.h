@@ -3,6 +3,8 @@
 #ifndef SRC_PARSER_H_
 #define SRC_PARSER_H_
 
+/*
+
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -26,12 +28,24 @@ ElemType Type(const char *s) {
   return ElemType::ERR;
 }
 
-int Int(const char *s) {
-  int result;
-  sscanf(s, "%" )
+int32_t Int(const char *s) {
+  int32_t result;
+  sscanf(s, "%" PRId32, &result);
+  return result;
 }
+
+float Float(const char *s) {
+  float result;
+  sscanf(s, "%f", &result);
+  return result;
+}
+
+Element GetElement(const char *)
+
 }  // namespace Parser
 
 }  // namespace uxp
+
+*/
 
 #endif  // SRC_PARSER_H_
