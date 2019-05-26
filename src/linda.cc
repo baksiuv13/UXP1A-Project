@@ -1,7 +1,7 @@
 // Copyright 2019 UXP1A Students Team
 
 #include <cassert>
-#include "src/Linda.h"
+#include "src/linda.h"
 
 namespace uxp {
 

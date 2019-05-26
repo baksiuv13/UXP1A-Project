@@ -10,12 +10,13 @@
 
 #include "src/memory_chunk.h"
 #include "src/type.h"
-#include "Tuple.h"
+#include "src/tuple.h"
 
 namespace uxp {
 
 class Linda {
  public:
+  static constexpr size_t TUPLES_NUMBER = 100;
 
   using Type = ElemType;
 

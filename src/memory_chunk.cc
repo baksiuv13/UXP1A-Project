@@ -7,23 +7,6 @@
 #include <stdexcept>
 
 namespace uxp {
-/*
-void *MemoryChunk::CreateNewMem_(const char *path, int key_id) {
-  int shm_key = ftok(path, key_id);
-  if (shm_key < 0)
-    return nullptr;
-  int shm_id = shmget(shm_key, MEMORY_SIZE, IPC_CREAT | IPC_EXCL | 0660);
-  if (shm_id < 0) {
-    return nullptr;
-  }
-  void *mem = shmat(shm_id, nullptr, 0);
-  if (mem == reinterpret_cast<void *>(-1)) {
-    shmctl(shm_id, IPC_RMID, nullptr);
-    return nullptr;
-  }
-  return mem;
-}
-*/
 
 MemoryChunk::MemoryChunk()
     : state_(State::BLANK),

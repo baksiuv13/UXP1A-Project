@@ -10,40 +10,30 @@
 #include <cstring>
 #include <iostream>
 
-#include "src/Linda.h"
+#include "src/linda.h"
 
 static constexpr const char *filename = "./shm-test-file";
 
 using uxp::ElemType;
 using uxp::Linda;
-using Elem = uxp::Element;
-using Tuple = uxp::Tuple;
-using TupleDesc = uxp::TupleDesc;
-using Condition = uxp::ElementDesc::Condidtion;
+using uxp::Element;
+using uxp::ElementDesc;
+using uxp::Tuple;
+using uxp::TupleDesc;
+using Condition = uxp::ElementDesc::Condition;
 
 int main(int argc, char **argv, char **env) {
   Tuple t;
   t.size = 3;
-  t.elements[0].type = ElemType::INT;
-  t.elements[0].value.int_ = 5;
-  t.elements[1].type = ElemType::STRING;
-  t.elements[1].str_size = 4;
-  memcpy(t.elements[1].value.string_, "haha", 5);
-  t.elements[2].type = ElemType::FLOAT;
-  t.elements[2].value.float_ = 9.6;
+  t.elements[0] = Element(5);
+  t.elements[1] = Element("haha");
+  t.elements[2] = Element(9.6f);
 
   TupleDesc td;
   td.size = 3;
-  td.elements[0].type = ElemType::INT;
-  td.elements[0].value.int_ = 5;
-  td.elements[0].condition = Condition::EQUAL;
-  td.elements[1].type = ElemType::STRING;
-  td.elements[1].str_size = 7;
-  td.elements[1].condition = Condition::GREATER_EQ;
-  memcpy(td.elements[1].value.string_, "chehehe", 8);
-  td.elements[2].type = ElemType::FLOAT;
-  td.elements[2].value.float_ = 10.0;
-  td.elements[2].condition = Condition::LESS;
+  td.elements[0] = ElementDesc(5, Condition::EQUAL);
+  td.elements[1] = ElementDesc("chehehe", Condition::GREATER_EQ);
+  td.elements[2] = ElementDesc(10.0f, Condition::LESS);
 
   std::cerr << uxp::ChkTuple(&t, &td) << '\n';
 
