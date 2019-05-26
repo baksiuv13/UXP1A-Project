@@ -16,10 +16,10 @@ static constexpr const char *filename = "./shm-test-file";
 
 using uxp::Linda;
 using uxp::ElemType;
-using Elem = Linda::Element;
-using Tuple = Linda::Tuple;
-using TupleDesc = Linda::TupleDesc;
-using Condition = Linda::ElementDesc::Condidtion;
+using Elem = uxp::Element;
+using Tuple = uxp::Tuple;
+using TupleDesc = uxp::TupleDesc;
+using Condition = uxp::ElementDesc::Condidtion;
 
 int jeden() {
   Linda linda;
