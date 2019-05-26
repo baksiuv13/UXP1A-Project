@@ -16,10 +16,11 @@ static constexpr const char *filename = "./shm-test-file";
 
 using uxp::Linda;
 using uxp::ElemType;
-using Elem = uxp::Element;
-using Tuple = uxp::Tuple;
-using TupleDesc = uxp::TupleDesc;
-using Condition = uxp::ElementDesc::Condidtion;
+using uxp::Element;
+using uxp::ElementDesc;
+using uxp::Tuple;
+using uxp::TupleDesc;
+using Condition = ElementDesc::Condition;
 
 int jeden() {
   Linda linda;
@@ -31,13 +32,9 @@ int jeden() {
   }
   Tuple t;
   t.size = 3;
-  t.elements[0].type = ElemType::INT;
-  t.elements[0].value.int_ = 5;
-  t.elements[1].type = ElemType::STRING;
-  t.elements[1].str_size = 4;
-  memcpy(t.elements[1].value.string_, "haha", 5);
-  t.elements[2].type = ElemType::FLOAT;
-  t.elements[2].value.float_ = 9.6;
+  t.elements[0] = Element(5);
+  t.elements[1] = Element("haha");
+  t.elements[2] = Element(9.6f);
   linda.Output(t);
   std::cerr << "jeden: wpisane już\n";
   int xd;
@@ -57,16 +54,9 @@ int dwa() {
   }
   TupleDesc t;
   t.size = 3;
-  t.elements[0].type = ElemType::INT;
-  t.elements[0].value.int_ = 5;
-  t.elements[0].condition = Condition::EQUAL;
-  t.elements[1].type = ElemType::STRING;
-  t.elements[1].str_size = 6;
-  t.elements[1].condition = Condition::LESS_EQ;
-  memcpy(t.elements[1].value.string_, "hehehe", 7);
-  t.elements[2].type = ElemType::FLOAT;
-  t.elements[2].value.float_ = 10.0;
-  t.elements[2].condition = Condition::LESS;
+  t.elements[0] = ElementDesc(5, Condition::EQUAL);
+  t.elements[1] = ElementDesc("hehehe", Condition::LESS_EQ);
+  t.elements[2] = ElementDesc(10.0f, Condition::LESS);
   std::cerr << "wpisane, szukanko\n";
   Tuple tuple = linda.Input(t, 0);
   std::cerr << "Ok, coś mam " << tuple.size << "\n";

@@ -23,11 +23,28 @@ struct Element {
     float float_;
     char string_[MAX_STRING_SIZE];
   } value;
+
+  Element() = default;
+  ~Element() = default;
+  explicit Element(int32_t i)
+    : type(Type::INT), value{.int_ = i} {}
+  explicit Element(float f)
+    : type(Type::FLOAT), value{.float_ = f} {}
+  explicit Element(const char *s)
+    : type(Type::STRING) {
+    size_t i;
+    char c;
+    for (i = 0; i < MAX_STRING_SIZE - 1 && (c = s[i]) !='\0'; ++i) {
+      value.string_[i] = c;
+    }
+    value.string_[i] = '\0';
+    str_size = i;
+  }
 };
 
 struct ElementDesc {
   Type type;
-  enum Condidtion : int16_t {
+  enum Condition : int16_t {
     ANY,         // *
     LESS,        // <
     GREATER,     // >
@@ -41,6 +58,25 @@ struct ElementDesc {
     float float_;
     char string_[MAX_STRING_SIZE];
   } value;
+
+  ElementDesc() = default;
+  ~ElementDesc() = default;
+  explicit ElementDesc(int32_t i, Condition cnd)
+    : type(Type::INT), condition(cnd), value{.int_ = i} {}
+  explicit ElementDesc(float f, Condition cnd)
+    : type(Type::FLOAT), condition(cnd), value{.float_ = f} {}
+  explicit ElementDesc(const char *s, Condition cnd)
+    : type(Type::STRING) {
+    condition = cnd;
+    if (cnd == ANY) return;
+    size_t i;
+    char c;
+    for (i = 0; i < MAX_STRING_SIZE - 1 && (c = s[i]) !='\0'; ++i) {
+      value.string_[i] = c;
+    }
+    value.string_[i] = '\0';
+    str_size = i;
+  }
 };
 
 bool ChkElem(const Element *, const ElementDesc *);
