@@ -12,10 +12,11 @@
 
 #include "src/memory_chunk.h"
 
+static constexpr const char *filename = "./shm-test-file";
 
 int jeden() {
   uxp::MemoryChunk mc;
-  mc.AttachNew("./haha", 100);
+  mc.AttachNew(filename, 100);
   if (!mc.IsOpen()) {
     std::cerr << "jeden: Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
     std::cerr << strerror(errno) << '\n';
@@ -33,7 +34,7 @@ int dwa() {
   sleep(5);
   std::cerr << "dwa: ok, spróbuję to przeczytać\n";
   uxp::MemoryChunk mc;
-  mc.Attach("./haha");
+  mc.Attach(filename);
   if (!mc.IsOpen()) {
     std::cerr << "dwa: Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
     std::cerr << strerror(errno) << '\n';
@@ -55,7 +56,6 @@ int inne(int argc, char **argv, char **env) {
   }
 }
 
-
 int main(int argc, char **argv, char **env) {
   std::cerr << getpid() << '\n';
 
@@ -65,7 +65,7 @@ int main(int argc, char **argv, char **env) {
 
   uxp::MemoryChunk mc;
 
-  mc.AttachNew("./haha", 666);
+  mc.AttachNew(filename, 666);
 
   if (!mc.IsOpen()) {
     std::cerr << "Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
@@ -77,8 +77,6 @@ int main(int argc, char **argv, char **env) {
   reinterpret_cast<char *>(mc.GetMem())[665] = '\0';
 
   std::cerr << reinterpret_cast<char *>(mc.GetMem());
-
-
 
   return 0;
 }

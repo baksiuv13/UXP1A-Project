@@ -29,3 +29,13 @@ add_executable(worktest1
   worktest1.cc
   "${SOURCES_src}"
 )
+
+add_executable(worktest2
+  worktest2.cc
+  "${SOURCES_src}"
+)
+
+add_executable(worktest3
+  worktest3.cc
+  "${SOURCES_src}"
+)

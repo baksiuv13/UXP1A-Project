@@ -3,8 +3,8 @@
 #include "src/memory_chunk.h"
 
 #include <cassert>
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 namespace uxp {
 /*
@@ -25,23 +25,20 @@ void *MemoryChunk::CreateNewMem_(const char *path, int key_id) {
 }
 */
 
-
 MemoryChunk::MemoryChunk()
-  : state_(State::BLANK), shm_id_(0), sem_id_(0), key_(0), address_(nullptr),
-    size_(0) {}
+    : state_(State::BLANK),
+      shm_id_(0),
+      sem_id_(0),
+      key_(0),
+      address_(nullptr),
+      size_(0) {}
 
-MemoryChunk::MemoryChunk(const char *path, size_t size)
-  : MemoryChunk() {
-  int e = CreateNewMem_(path, size);
-  // if (e < 0)
-  //   throw std::runtime_error("");
+MemoryChunk::MemoryChunk(const char *path, size_t size) : MemoryChunk() {
+  CreateNewMem_(path, size);
 }
 
-MemoryChunk::MemoryChunk(const char *path)
-  : MemoryChunk() {
-  int e = AttachNotNew_(path);
-  // if (e < 0)
-  //   throw std::runtime_error("");
+MemoryChunk::MemoryChunk(const char *path) : MemoryChunk() {
+  AttachNotNew_(path);
 }
 
 MemoryChunk::~MemoryChunk() {
@@ -55,8 +52,7 @@ int MemoryChunk::CreateNewMem_(const char *path, size_t size) {
 
   key_t shm_key = ftok(path, SHM_PROJ_ID);
   key_t sem_key = ftok(path, SEM_PROJ_ID);
-  if (static_cast<int>(shm_key) < 0 || static_cast<int>(sem_key) < 0)
-    return -1;
+  if (static_cast<int>(shm_key) < 0 || static_cast<int>(sem_key) < 0) return -1;
   int shm_id = shmget(shm_key, size, IPC_CREAT | IPC_EXCL | 0660);
   if (shm_id < 0) {
     return -2;
@@ -94,14 +90,14 @@ int MemoryChunk::CreateNewMem_(const char *path, size_t size) {
   return 0;
 }
 
-
 int MemoryChunk::AttachNotNew_(const char *path) {
   assert(state_ == BLANK);
 
   key_t shm_key = ftok(path, SHM_PROJ_ID);
   key_t sem_key = ftok(path, SEM_PROJ_ID);
-  if (static_cast<int>(shm_key) < 0 || static_cast<int>(sem_key) < 0)
+  if (static_cast<int>(shm_key) < 0 || static_cast<int>(sem_key) < 0) {
     return -1;
+  }
   int shm_id = shmget(shm_key, 0, 0);
   if (shm_id < 0) {
     return -2;
@@ -133,8 +129,6 @@ int MemoryChunk::AttachNotNew_(const char *path) {
   size_ = shmds.shm_segsz;
   return 0;
 }
-
-
 
 int MemoryChunk::AttachNew(const char *path, size_t size) {
   int e = CreateNewMem_(path, size);
@@ -181,9 +175,8 @@ void MemoryChunk::Detach() {
 }
 
 char &MemoryChunk::operator[](size_t i) {
-  return IsOpen() ?
-    static_cast<char *>(GetMem())[i] :
-    *static_cast<char *>(nullptr);
+  return IsOpen() ? static_cast<char *>(GetMem())[i]
+                  : *static_cast<char *>(nullptr);
 }
 
 }  // namespace uxp
