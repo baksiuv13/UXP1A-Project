@@ -23,7 +23,7 @@ get_directory_property(
 add_executable(linda
   cpp_sample.cc
   "${SOURCES_src}"
-)
+        src/Element.cc src/Element.h src/Tuple.cc src/Tuple.h)
 
 add_executable(worktest1
   worktest1.cc
