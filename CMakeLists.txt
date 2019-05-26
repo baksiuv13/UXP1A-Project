@@ -15,7 +15,6 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 
 include_directories("${CMAKE_SOURCE_DIR}")
 
-
 add_subdirectory(src)
 get_directory_property(
   SOURCES_src DIRECTORY src DEFINITION SOURCES
@@ -26,11 +25,7 @@ add_executable(linda
   "${SOURCES_src}"
 )
 
-add_executable(testhehe
-  testhehe.cc
+add_executable(worktest1
+  worktest1.cc
   "${SOURCES_src}"
 )
-
-#target_link_libraries(linda
-#  
-#)

@@ -33,15 +33,15 @@ MemoryChunk::MemoryChunk()
 MemoryChunk::MemoryChunk(const char *path, size_t size)
   : MemoryChunk() {
   int e = CreateNewMem_(path, size);
-  if (e < 0)
-    throw std::runtime_error("");
+  // if (e < 0)
+  //   throw std::runtime_error("");
 }
 
 MemoryChunk::MemoryChunk(const char *path)
   : MemoryChunk() {
   int e = AttachNotNew_(path);
-  if (e < 0)
-    throw std::runtime_error("");
+  // if (e < 0)
+  //   throw std::runtime_error("");
 }
 
 MemoryChunk::~MemoryChunk() {
@@ -170,6 +170,7 @@ void MemoryChunk::Close_() {
       std::cerr << "blad xd\n";
     }
   }
+  state_ = BLANK;
 }
 
 void MemoryChunk::Detach() {
