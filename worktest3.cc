@@ -16,10 +16,10 @@ static constexpr const char *filename = "./shm-test-file";
 
 using uxp::ElemType;
 using uxp::Linda;
-using Elem = Linda::Element;
-using Tuple = Linda::Tuple;
-using TupleDesc = Linda::TupleDesc;
-using Condition = Linda::ElementDesc::Condidtion;
+using Elem = uxp::Element;
+using Tuple = uxp::Tuple;
+using TupleDesc = uxp::TupleDesc;
+using Condition = uxp::ElementDesc::Condidtion;
 
 int main(int argc, char **argv, char **env) {
   Tuple t;
@@ -45,7 +45,7 @@ int main(int argc, char **argv, char **env) {
   td.elements[2].value.float_ = 10.0;
   td.elements[2].condition = Condition::LESS;
 
-  std::cerr << Linda::ChkTuple(&t, &td) << '\n';
+  std::cerr << uxp::ChkTuple(&t, &td) << '\n';
 
   return 0;
 }
