@@ -11,13 +11,13 @@
 #include "src/Linda.h"
 
 using uxp::Linda;
-using Element = Linda::Element;
-using ElementDesc = Linda::ElementDesc;
+using Element = uxp::Element;
+using ElementDesc = uxp::ElementDesc;
 using Condition = ElementDesc::Condidtion;
 using uxp::ElemType;
 
 bool Chk(const Element &e, const ElementDesc &ed) {
-  return Linda::ChkElem(&e, &ed);
+  return ChkElem(&e, &ed);
 }
 
 BOOST_AUTO_TEST_CASE(int_is_not_float) {
