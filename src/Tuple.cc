@@ -2,7 +2,7 @@
 
 #include "Tuple.h"
 
-namespace uxp{
+namespace uxp {
 
 Tuple TupleFromString(const std::string &s) {
   Tuple result;
@@ -71,8 +71,7 @@ bool ChkElem(const Element *e, const ElementDesc *ed) {
                           : strncmp(e->value.string_, ed->value.string_,
                                     MAX_STRING_SIZE) == 0;
     case ElementDesc::ANY:
-    default:
-      return true;
+    default:return true;
   }
 }
 

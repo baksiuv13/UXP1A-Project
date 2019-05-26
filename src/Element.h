@@ -9,7 +9,7 @@
 #include <cstring>
 #include "src/type.h"
 
-namespace uxp{
+namespace uxp {
 
 using Type = ElemType;
 

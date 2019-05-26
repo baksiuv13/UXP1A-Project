@@ -1,12 +1,7 @@
 // Copyright 2019 UXP1A Students Team
 
-#include "src/Linda.h"
-
-#include <algorithm>
 #include <cassert>
-#include <cstring>
-#include <iostream>
-#include <stdexcept>
+#include "src/Linda.h"
 
 namespace uxp {
 
@@ -26,7 +21,7 @@ void Linda::Output(Tuple tuple) {
     return;
   }
   // We did not find empty place. We should wait??
-  assert(((void)&Linda::Output, 0));  // Temporary solution.
+  assert(((void) &Linda::Output, 0));  // Temporary solution.
 }
 
 Tuple Linda::Input(TupleDesc describe, unsigned int timeout_ms) {
