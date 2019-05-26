@@ -11,8 +11,11 @@ namespace uxp {
 class MemoryChunk {
  public:
   enum State {
+    // Memory is not attached.
     BLANK = 0,
+    // Memory is created by this object.
     CREATED = 1,
+    // Memory is created by other object.
     GIVEN = 2,
   };
   // static constexpr struct CREATE_t {} CREATE {};
@@ -20,21 +23,25 @@ class MemoryChunk {
   // static constexpr size_t MEMORY_SIZE = 64 * 1024;
 
   MemoryChunk();
+
+  // Link existing memory.
   explicit MemoryChunk(const char *path);
+
+  // Create new memory.
   explicit MemoryChunk(const char *path, size_t size);
 
-  MemoryChunk(const MemoryChunk&);
-  MemoryChunk &operator=(const MemoryChunk&);
+  MemoryChunk(const MemoryChunk &) = delete;
+  MemoryChunk &operator=(const MemoryChunk &) = delete;
 
   MemoryChunk(MemoryChunk &&);
   MemoryChunk &operator=(MemoryChunk &&);
 
   ~MemoryChunk();
 
-  bool IsOpen() {return state_ != BLANK;}
-  void *GetMem() {return IsOpen() ? address_ : nullptr;}
+  constexpr bool IsOpen() const { return state_ != BLANK; }
+  void *GetMem() { return IsOpen() ? address_ : nullptr; }
   // int GetMemId() {return IsOpen() ? shm_id_ : 0;}
-  size_t GetSize() {return IsOpen() ? size_ : 0;}
+  constexpr size_t GetSize() const { return IsOpen() ? size_ : 0; }
   int Attach(const char *path);
   int AttachNew(const char *path, size_t size);
   void Detach();
