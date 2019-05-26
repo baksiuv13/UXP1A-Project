@@ -42,6 +42,7 @@ class MemoryChunk {
   void *GetMem() { return IsOpen() ? address_ : nullptr; }
   // int GetMemId() {return IsOpen() ? shm_id_ : 0;}
   size_t GetSize() const { return IsOpen() ? size_ : 0; }
+
   int Attach(const char *path);
   int AttachNew(const char *path, size_t size);
   void Detach();
