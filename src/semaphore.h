@@ -24,6 +24,8 @@ enum {
 
 bool P(uint16_t semNum);
 bool V(uint16_t semNum);
+bool initializeAll(int32_t value);
+bool initialize(uint16_t semNum, int32_t value);
 
 class Semaphore {
  private:
@@ -33,6 +35,7 @@ class Semaphore {
   explicit Semaphore(uint16_t semNum);
   bool P();
   bool V();
+  bool initialize(int32_t value);
 };
 
 }  // namespace semaphore

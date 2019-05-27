@@ -7,5 +7,15 @@ int main(int argc, char **argv, char **env) {
 
   uxp::semaphore::Semaphore sem = uxp::semaphore::Semaphore(0);
 
+  //  play
+  sem.initialize(2);
+
+  sem.P();
+  sem.P();
+  sem.V();
+  sem.P();
+
+  // ~play
+
   return 0;
 }
