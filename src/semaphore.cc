@@ -48,6 +48,14 @@ bool uxp::Semaphore::initialize(const uint16_t semNum, const int32_t value) {
   }
 }
 
+int32_t uxp::Semaphore::getValue(const uint16_t semNum) {
+  return semctl(SEM_ID, semNum, GETVAL);
+}
+
+bool uxp::Semaphore::isZero(const uint16_t semNum) {
+  return !getValue(semNum);
+}
+
 uxp::Semaphore::Semaphore(const uint16_t semNum): semNum(semNum) {}
 
 bool uxp::Semaphore::P() {
@@ -60,4 +68,12 @@ bool uxp::Semaphore::V() {
 
 bool uxp::Semaphore::initialize(const int32_t value) {
   return uxp::Semaphore::initialize(this->semNum, value);
+}
+
+int32_t uxp::Semaphore::getValue() {
+  return semctl(SEM_ID, this->semNum, GETVAL);
+}
+
+bool uxp::Semaphore::isZero() {
+  return !getValue(this->semNum);
 }

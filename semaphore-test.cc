@@ -10,10 +10,23 @@ int main(int argc, char **argv, char **env) {
   //  play
   sem.initialize(2);
 
+  std::cout << "2?: " << sem.getValue() << std::endl;
+
   sem.P();
+  std::cout << "1?: " << sem.getValue() << std::endl;
+
   sem.P();
+  std::cout << "0?: " << sem.getValue() << std::endl;
+
   sem.V();
+  std::cout << "1?: " << sem.getValue() << std::endl;
+
+  std::cout << "False?: " << sem.isZero() << std::endl;
+
   sem.P();
+  std::cout << "0?: " << sem.getValue() << std::endl;
+
+  std::cout << "True?: " << sem.isZero() << std::endl;
 
   // ~play
 

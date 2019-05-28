@@ -28,11 +28,16 @@ class Semaphore {
   static bool V(const uint16_t semNum);
   static bool initializeAll(const int32_t value);
   static bool initialize(const uint16_t semNum, const int32_t value);
+  static int32_t getValue(const uint16_t semNum);
+  static bool isZero(const uint16_t semNum);
 
   explicit Semaphore(const uint16_t semNum);
+
   bool P();
   bool V();
   bool initialize(const int32_t value);
+  int32_t getValue();
+  bool isZero();
 };
 
 }  // namespace uxp
