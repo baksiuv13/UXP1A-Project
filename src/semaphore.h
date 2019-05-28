@@ -8,37 +8,33 @@
 #include <iostream>
 
 namespace uxp {
-namespace semaphore {
-  // constants for ftok()
-static const char SEM_KEY_PATH[] = "./semkeypath";
-static const int32_t SEM_KEY_PROJ_ID = 13;
-static const int32_t N_SEMS = 13;
-
-// global semaphore identifier
-static key_t semKey = ftok(SEM_KEY_PATH, SEM_KEY_PROJ_ID);
-static int32_t semId = semget(semKey, N_SEMS, 0666 | IPC_CREAT);
-
-enum {
-  semaphore,
-  semaphore1};  // to semNum
-
-bool P(uint16_t semNum);
-bool V(uint16_t semNum);
-bool initializeAll(int32_t value);
-bool initialize(uint16_t semNum, int32_t value);
 
 class Semaphore {
  private:
-  uint16_t semNum;
+  const uint16_t semNum;
 
  public:
-  explicit Semaphore(uint16_t semNum);
+  // constants for ftok()
+  static const char SEM_KEY_PATH[];
+  static const int32_t SEM_KEY_PROJ_ID;
+
+  static const int32_t N_SEMS;
+
+  static const key_t SEM_KEY;
+  // global semaphore identifier
+  static const int32_t SEM_ID;
+
+  static bool P(const uint16_t semNum);
+  static bool V(const uint16_t semNum);
+  static bool initializeAll(const int32_t value);
+  static bool initialize(const uint16_t semNum, const int32_t value);
+
+  explicit Semaphore(const uint16_t semNum);
   bool P();
   bool V();
-  bool initialize(int32_t value);
+  bool initialize(const int32_t value);
 };
 
-}  // namespace semaphore
 }  // namespace uxp
 
 #endif  // SRC_SEMAPHORE_H_
