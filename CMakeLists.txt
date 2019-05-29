@@ -30,6 +30,11 @@ add_executable(linda
   "${SOURCES_src}"
 )
 
+add_executable(semaphore
+  semaphore-test.cc
+  "${SOURCES_src}"
+)
+
 add_executable(worktest1
   worktest1.cc
   "${SOURCES_src}"

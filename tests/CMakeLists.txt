@@ -1,3 +1,4 @@
+
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
