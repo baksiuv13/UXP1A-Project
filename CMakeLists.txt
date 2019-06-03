@@ -22,8 +22,17 @@ add_subdirectory(src)
 get_directory_property(
   SOURCES_src DIRECTORY src DEFINITION SOURCES
 )
+add_subdirectory(client)
+get_directory_property(
+  SOURCES_client DIRECTORY client DEFINITION SOURCES
+)
 add_subdirectory(tests)
 
+add_executable(client.out
+  client/client.cc
+  "${SOURCES_src}"
+  "${SOURCES_client}"
+)
 
 add_executable(linda
   cpp_sample.cc

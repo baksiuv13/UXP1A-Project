@@ -5,8 +5,8 @@
 
 #include <cstdint>
 #include <cstdlib>
-#include <string>
 #include <cstring>
+#include <string>
 #include "src/type.h"
 
 namespace uxp {
@@ -26,19 +26,29 @@ struct Element {
 
   Element() = default;
   ~Element() = default;
-  explicit Element(int32_t i)
-    : type(Type::INT), value{.int_ = i} {}
-  explicit Element(float f)
-    : type(Type::FLOAT), value{.float_ = f} {}
-  explicit Element(const char *s)
-    : type(Type::STRING) {
+  explicit Element(int32_t i) : type(Type::INT), value{.int_ = i} {}
+  explicit Element(float f) : type(Type::FLOAT), value{.float_ = f} {}
+  explicit Element(const char *s) : type(Type::STRING) {
     size_t i;
     char c;
-    for (i = 0; i < MAX_STRING_SIZE - 1 && (c = s[i]) !='\0'; ++i) {
+    for (i = 0; i < MAX_STRING_SIZE - 1 && (c = s[i]) != '\0'; ++i) {
       value.string_[i] = c;
     }
     value.string_[i] = '\0';
     str_size = i;
+  }
+
+  std::string ToString() {
+    switch (type) {
+      case Type::INT:
+        return std::to_string(value.int_);
+      case Type::FLOAT:
+        return std::to_string(value.float_);
+      case Type::STRING:
+        return std::string(value.string_);
+      default:
+        return "ERROR";
+    }
   }
 };
 
@@ -62,16 +72,15 @@ struct ElementDesc {
   ElementDesc() = default;
   ~ElementDesc() = default;
   explicit ElementDesc(int32_t i, Condition cnd)
-    : type(Type::INT), condition(cnd), value{.int_ = i} {}
+      : type(Type::INT), condition(cnd), value{.int_ = i} {}
   explicit ElementDesc(float f, Condition cnd)
-    : type(Type::FLOAT), condition(cnd), value{.float_ = f} {}
-  explicit ElementDesc(const char *s, Condition cnd)
-    : type(Type::STRING) {
+      : type(Type::FLOAT), condition(cnd), value{.float_ = f} {}
+  explicit ElementDesc(const char *s, Condition cnd) : type(Type::STRING) {
     condition = cnd;
     if (cnd == ANY) return;
     size_t i;
     char c;
-    for (i = 0; i < MAX_STRING_SIZE - 1 && (c = s[i]) !='\0'; ++i) {
+    for (i = 0; i < MAX_STRING_SIZE - 1 && (c = s[i]) != '\0'; ++i) {
       value.string_[i] = c;
     }
     value.string_[i] = '\0';
@@ -80,7 +89,6 @@ struct ElementDesc {
 };
 
 bool ChkElem(const Element *, const ElementDesc *);
-
 
 }  // namespace uxp
 

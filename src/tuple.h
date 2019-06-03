@@ -5,8 +5,8 @@
 
 #include <cstdint>
 #include <cstdlib>
-#include <string>
 #include <cstring>
+#include <string>
 #include "src/element.h"
 
 namespace uxp {
@@ -18,6 +18,15 @@ constexpr size_t MAX_TUPLE_SIZE = 100;
 struct Tuple {
   size_t size;
   Element elements[MAX_TUPLE_SIZE];
+  std::string ToString() {
+    std::string out = "(";
+    for (size_t i = 0; i < size; ++i) {
+      out += elements[i].ToString();
+      if (i != size - 1) out += ", ";
+    }
+    out += ")";
+    return out;
+  }
 };
 
 struct TupleDesc {
