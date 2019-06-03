@@ -51,6 +51,56 @@ uxp::Tuple parse_tuple(size_t size) {
   return tuple;
 }
 
+uxp::ElementDesc::Condition get_condition(std::string cmp) {
+  if (cmp == "*")
+    return uxp::ElementDesc::Condition::ANY;
+  else if (cmp == "<")
+    return uxp::ElementDesc::Condition::LESS;
+  else if (cmp == ">")
+    return uxp::ElementDesc::Condition::GREATER;
+  else if (cmp == "<=")
+    return uxp::ElementDesc::Condition::LESS_EQ;
+  else if (cmp == ">=")
+    return uxp::ElementDesc::Condition::GREATER_EQ;
+  else if (cmp == "==")
+    return uxp::ElementDesc::Condition::EQUAL;
+  throw std::runtime_error("Invalid condition");
+}
+
+template <typename T>
+T get_when_need(uxp::ElementDesc::Condition cmp) {
+  T val;
+  if (cmp == uxp::ElementDesc::ANY) return val;
+  std::cin >> val;
+  return val;
+}
+
+uxp::ElementDesc parse_element_desc() {
+  std::string type, cond;
+  std::cin >> type >> cond;
+  auto condition = get_condition(cond);
+  if (type == "i") {
+    return uxp::ElementDesc(get_when_need<int32_t>(condition), condition);
+  } else if (type == "f") {
+    return uxp::ElementDesc(get_when_need<float>(condition), condition);
+  } else if (type == "s") {
+    return uxp::ElementDesc(get_when_need<std::string>(condition).c_str(),
+                            condition);
+  } else {
+    std::cout << "Element type '" + type + " is invalid" << std::endl;
+    throw std::runtime_error("Invalid type");
+  }
+}
+
+uxp::TupleDesc parse_tuple_desc(size_t size) {
+  uxp::TupleDesc tuple;
+  tuple.size = size;
+  for (size_t i = 0; i < size; ++i) {
+    tuple.elements[i] = parse_element_desc();
+  }
+  return tuple;
+}
+
 void help() {
   std::cout << "Possible commands: " << std::endl;
   std::cout << "* help - see this" << std::endl;
@@ -84,6 +134,26 @@ void output() {
   std::cout << "> Output for " << tuple.ToString() << std::endl;
 }
 
+void input() {
+  size_t size;
+  int timeout;
+  std::cin >> size >> timeout;
+  auto tuple = parse_tuple_desc(size);
+  std::cout << "> Input: wait for find tuple..." << std::endl;
+  auto result = linda.Input(tuple, timeout * 1000);
+  std::cout << "> Found: " << result.ToString() << std::endl;
+}
+
+void read() {
+  size_t size;
+  int timeout;
+  std::cin >> size >> timeout;
+  auto tuple = parse_tuple_desc(size);
+  std::cout << "> Read: wait for find tuple..." << std::endl;
+  auto result = linda.Input(tuple, timeout * 1000);
+  std::cout << "> Found: " << result.ToString() << std::endl;
+}
+
 int main(int argc, char **argv, char **env) {
   if (argc < 2) {
     std::cout << "Need a sharedmemory file as arg";
@@ -113,9 +183,9 @@ int main(int argc, char **argv, char **env) {
       else if (command == "output")
         output();
       else if (command == "input")
-        std::cout << "inp";
+        input();
       else if (command == "read")
-        std::cout << "read";
+        read();
       else if (command != "")
         std::cout << "# Unknown command. See 'help'" << std::endl;
     } catch (std::exception e) {
