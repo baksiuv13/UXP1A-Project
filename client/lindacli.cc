@@ -33,8 +33,9 @@ void LindaCli::Run() {
       Read();
     else if (command != "")
       std::cout << "# Unknown command. See 'help'" << std::endl;
-  } catch (std::exception e) {
-    std::cout << "# Invalid execute." << std::endl;
+  } catch (std::runtime_error e) {
+    std::cout << "# Invalid execute: " << e.what() << std::endl;
+    // ClearStdinLine();
   }
 }
 
@@ -78,6 +79,7 @@ T LindaCli::ParseTuple(size_t size) {
   for (size_t i = 0; i < size; ++i) {
     tuple.elements[i] = ParseElement<E>();
   }
+  if (tuple.size == 0) throw std::runtime_error("Invalid tuple");
   return tuple;
 }
 
@@ -127,7 +129,10 @@ void LindaCli::Input() {
   auto tuple = ParseTuple<uxp::TupleDesc, uxp::ElementDesc>(size);
   std::cout << "> Input: wait for find tuple..." << std::endl;
   auto result = linda->Input(tuple, timeout * 1000);
-  std::cout << "> Found: " << result.ToString() << std::endl;
+  if (result.size == 0)
+    std::cout << "# Timeout expired.";
+  else
+    std::cout << "> Found: " << result.ToString() << std::endl;
 }
 
 void LindaCli::Read() {
@@ -135,9 +140,22 @@ void LindaCli::Read() {
   int timeout;
   std::cin >> size >> timeout;
   auto tuple = ParseTuple<uxp::TupleDesc, uxp::ElementDesc>(size);
+  if (tuple.size == 0) {
+    std::cout << "# Invalid tuple.";
+    return;
+  }
   std::cout << "> Read: wait for find tuple..." << std::endl;
   auto result = linda->Read(tuple, timeout * 1000);
-  std::cout << "> Found: " << result.ToString() << std::endl;
+  if (result.size == 0)
+    std::cout << "# Timeout expired.";
+  else
+    std::cout << "> Found: " << result.ToString() << std::endl;
+}
+
+void LindaCli::ClearStdinLine() {
+  int c;
+  while ((c = std::cin.get()) != '\n' && c != EOF) {
+  }
 }
 
 }  // namespace client

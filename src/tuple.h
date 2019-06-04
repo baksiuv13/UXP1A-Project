@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <chrono>
 #include "src/element.h"
 
 namespace uxp {

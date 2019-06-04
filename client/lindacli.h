@@ -34,6 +34,8 @@ class LindaCli {
   void Output();
   void Input();
   void Read();
+
+  void ClearStdinLine();
 };
 }  // namespace client
 

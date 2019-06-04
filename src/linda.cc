@@ -33,6 +33,7 @@ void Linda::Output(Tuple tuple) {
 Tuple Linda::Input(TupleDesc describe, unsigned int timeout_ms) {
   Tuple *t;
 
+  StartTimer();
   do {
     serviceQueue.P();
     resourceAccess.P();
@@ -47,7 +48,8 @@ Tuple Linda::Input(TupleDesc describe, unsigned int timeout_ms) {
       return ret;
     }
     resourceAccess.V();
-  } while (sleep(1));  // or other option for waiting/sleeping
+  } while (!IsTimeout(timeout_ms));  // or other option for waiting/sleeping
+  return Tuple{0};
 }
 
 void Linda::ZeroTuple_(Tuple *t) { t->size = 0; }
@@ -57,6 +59,7 @@ Tuple Linda::Read(TupleDesc describe, unsigned int timeout_ms) {
   Tuple ret;
   bool find = false;
 
+  StartTimer();
   do {
     serviceQueue.P();
     readCountAccess.P();
@@ -78,7 +81,9 @@ Tuple Linda::Read(TupleDesc describe, unsigned int timeout_ms) {
     readCountAccess.V();
 
     if (find) return ret;
-  } while (sleep(1));  // or other option for waiting/sleeping
+  } while (!IsTimeout(timeout_ms));  // or other option for waiting/sleeping
+
+  return Tuple{0};
 }
 
 Tuple *Linda::Find_(const TupleDesc &td) {
@@ -91,6 +96,18 @@ Tuple *Linda::Find_(const TupleDesc &td) {
     }
   }
   return nullptr;  // did not find
+}
+
+void Linda::StartTimer() {
+  start_time_point = std::chrono::system_clock::now();
+}
+
+bool Linda::IsTimeout(unsigned int timeout_ms) {
+  auto timeout = std::chrono::milliseconds(timeout_ms);
+  auto now = std::chrono::system_clock::now();
+  auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+      now - start_time_point);
+  return duration_ms > timeout;
 }
 
 }  // namespace uxp

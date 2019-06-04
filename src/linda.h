@@ -3,6 +3,7 @@
 #ifndef SRC_LINDA_H_
 #define SRC_LINDA_H_
 
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -73,8 +74,12 @@ class Linda {
   }
   Tuple *Find_(const TupleDesc &describe);
 
+  void StartTimer();
+  bool IsTimeout(unsigned int timeout_ms);
+
   MemoryChunk mc_;
   Semaphore serviceQueue, resourceAccess, readCountAccess, readCount;
+  std::chrono::system_clock::time_point start_time_point;
 };
 
 }  // namespace uxp
