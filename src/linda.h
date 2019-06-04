@@ -37,8 +37,6 @@ class Linda {
 
   // Create new memory.
   explicit Linda(const char *path, CREATE_t) : Linda() {
-    for (auto sem : {serviceQueue, resourceAccess, readCountAccess, readCount})
-      sem.initialize(0);
     mc_.AttachNew(path, MEM_SIZE);
     if (IsOpen()) {
       memset(mc_.GetMem(), '\0', mc_.GetSize());
@@ -47,6 +45,8 @@ class Linda {
 
   int Attach(const char *path) { return mc_.Attach(path); }
   int AttachNew(const char *path) {
+    for (auto sem : {serviceQueue, resourceAccess, readCountAccess, readCount})
+      sem.initialize(1);
     int result = mc_.AttachNew(path, MEM_SIZE);
     if (result >= 0) {
       memset(mc_.GetMem(), '\0', mc_.GetSize());
