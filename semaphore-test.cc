@@ -28,6 +28,8 @@ int main(int argc, char **argv, char **env) {
 
   std::cout << "True?: " << sem.isZero() << std::endl;
 
+  std::cout << "Close: True?: " << uxp::Semaphore::closeSemTable() << std::endl;
+
   // ~play
 
   return 0;

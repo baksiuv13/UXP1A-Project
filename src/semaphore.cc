@@ -56,6 +56,15 @@ bool uxp::Semaphore::isZero(const uint16_t semNum) {
   return !getValue(semNum);
 }
 
+bool uxp::Semaphore::closeSemTable() {
+  int rc =  semctl(SEM_ID, 0, IPC_RMID);  // 0 is ignored
+  if (rc < 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 uxp::Semaphore::Semaphore(const uint16_t semNum): semNum(semNum) {}
 
 bool uxp::Semaphore::P() {
