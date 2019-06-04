@@ -53,14 +53,12 @@ int MemoryChunk::CreateNewMem_(const char *path, size_t size) {
     return -4;
   }
   res = semctl(sem_id, 0, SETVAL, 0);
-  if (res < 0 /* || semctl_ret < 0 */) {
+  if (res < 0) {
     semctl(sem_id, 0, IPC_RMID);
     shmctl(shm_id, IPC_RMID, nullptr);
     std::cerr << "Could not set memory guarding semaphore, 5, errno:\n"
       << std::strerror(errno) << '\n';
     return -5;
-    // [TODO] Do clean up correctly.
-    // It is done chyba
   }
   // We also need some hack here, because if we lower semaophore when we exit
   // and someone other if on it, we upper it when we quit, because of SEM_UNDO.
@@ -160,22 +158,16 @@ void MemoryChunk::Close_() {
   smbf.sem_num = 0;
   smbf.sem_flg = IPC_NOWAIT | SEM_UNDO;
   shmdt(address_);
-  std::cerr << "##3 " << semctl(sem_id_, 0, GETVAL, 0) << " ###\n";
   int semop_ret = semop(sem_id_, &smbf, 1);
-  std::cerr << "##4 " << semctl(sem_id_, 0, GETVAL, 0) << " ###\n";
   if (semop_ret < 0) {
     if (errno == EAGAIN) {
       // Jest dobrze, jeśli tu jesteśmy, to znaczy, że jako ostatni zamykamy
       // naszą pamięć.
       int res = 0;
       res = semctl(sem_id_, 0, IPC_RMID);
-      std::cerr << "sprawdźmy: " << res << '\n';
-
       res = shmctl(shm_id_, IPC_RMID, nullptr);
-      std::cerr << "sprawdźmy 2: " << res << '\n';
     } else {
-      std::cerr << "blad xd\n";
-      perror("heh");
+      std::cerr << "Błąd:" << std::strerror(errno) << '\n';
     }
   }
   state_ = BLANK;
