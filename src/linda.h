@@ -5,20 +5,15 @@
 
 #include <cstdint>
 #include <cstdlib>
-#include <string>
 #include <cstring>
+#include <string>
 
 #include "src/memory_chunk.h"
-#include "src/type.h"
+#include "src/semaphore.h"
 #include "src/tuple.h"
+#include "src/type.h"
 
 namespace uxp {
-
-struct Semaphore{ // TODO remove it when we prepare our implementation of semaphores
-  void p(){};
-  void v(){};
-  bool equalZero(){};
-};
 
 class Linda {
  public:
@@ -30,13 +25,21 @@ class Linda {
   } CREATE{};
 
   // Create empty object.
-  Linda() : mc_() {}
+  Linda()
+      : mc_(),
+        serviceQueue(0),
+        resourceAccess(1),
+        readCountAccess(2),
+        readCount(3) {}
 
   // Link existing memory.
-  explicit Linda(const char *path) : mc_(path) {}
+  explicit Linda(const char *path) : Linda() { mc_.Attach(path); }
 
   // Create new memory.
-  explicit Linda(const char *path, CREATE_t) : mc_(path, MEM_SIZE) {
+  explicit Linda(const char *path, CREATE_t) : Linda() {
+    for (auto sem : {serviceQueue, resourceAccess, readCountAccess, readCount})
+      sem.initialize(0);
+    mc_.AttachNew(path, MEM_SIZE);
     if (IsOpen()) {
       memset(mc_.GetMem(), '\0', mc_.GetSize());
     }
@@ -71,7 +74,7 @@ class Linda {
   Tuple *Find_(const TupleDesc &describe);
 
   MemoryChunk mc_;
-  Semaphore serviceQueue, resourceAccess, readCountAccess, readCount; //TODO reimplement by using our semaphores
+  Semaphore serviceQueue, resourceAccess, readCountAccess, readCount;
 };
 
 }  // namespace uxp

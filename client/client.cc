@@ -45,6 +45,5 @@ int main(int argc, char **argv, char **env) {
 
   cli.Help();
   while (run) cli.Run();
-  
   return 0;
 }
