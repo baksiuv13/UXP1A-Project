@@ -30,6 +30,7 @@ class Semaphore {
   static bool initialize(const uint16_t semNum, const int32_t value);
   static int32_t getValue(const uint16_t semNum);
   static bool isZero(const uint16_t semNum);
+  static bool closeSemTable();
 
   explicit Semaphore(const uint16_t semNum);
 
