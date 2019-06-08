@@ -34,9 +34,9 @@ int main(int argc, char **argv, char **env) {
     linda.Attach(argv[1]);
 
   if (linda.IsOpen()) {
-    std::cout << "Linda is ready with shm: " << argv[1] << std::endl;
+    std::cout << "Linda is ready with shm: " << argv[1] << '\n';
   } else {
-    std::cerr << "Unable to open Linda for shm " << argv[1] << std::endl;
+    std::cerr << "Unable to open Linda for shm " << argv[1] << '\n';
     return -1;
   }
 

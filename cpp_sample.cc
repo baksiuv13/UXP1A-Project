@@ -21,7 +21,7 @@ int main(int argc, char **argv, char **env) {
   for (int i = 0; i < 100; ++i) {
     x -= fn(x);
   }
-  std::cout << "x = " << x << '\n';  // albo std::endl ale nie wiem
+  std::cout << "x = " << x << '\n';
 
   std::cerr << getpid() << '\n';
 
