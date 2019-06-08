@@ -1,8 +1,8 @@
 // Copyright 2019 UXP1A Students Team
 
-#include <cassert>
-#include <zconf.h>
 #include "src/linda.h"
+#include <zconf.h>
+#include <cassert>
 
 namespace uxp {
 
@@ -10,10 +10,10 @@ void Linda::Output(Tuple tuple) {
   // [TODO] empty tuple
 
   // Only for debug;
-  serviceQueue.p();
-  resourceAccess.p();
-  serviceQueue.v();
-  Tuple *tuples = &TupleAt_(0);
+  serviceQueue.P();
+  resourceAccess.P();
+  serviceQueue.V();
+  // Tuple *tuples = &TupleAt_(0);
 
   size_t i;
   for (i = 0; i < TUPLES_NUMBER; ++i) {
@@ -22,32 +22,34 @@ void Linda::Output(Tuple tuple) {
       continue;
     }
     *t = tuple;
-    resourceAccess.v();
+    resourceAccess.V();
     return;
   }
-  resourceAccess.v();
+  resourceAccess.V();
   // We did not find empty place. We should wait??
-  assert(((void) &Linda::Output, 0));  // Temporary solution.
+  assert(((void)&Linda::Output, 0));  // Temporary solution.
 }
 
 Tuple Linda::Input(TupleDesc describe, unsigned int timeout_ms) {
   Tuple *t;
 
-  do{
-    serviceQueue.p();
-    resourceAccess.p();
-    serviceQueue.v();
+  StartTimer();
+  do {
+    serviceQueue.P();
+    resourceAccess.P();
+    serviceQueue.V();
 
     t = Find_(describe);
 
-    if(t != nullptr){
+    if (t != nullptr) {
       Tuple ret = *t;
       ZeroTuple_(t);
-      resourceAccess.v();
+      resourceAccess.V();
       return ret;
     }
-    resourceAccess.v();
-  } while (sleep(1));  // or other option for waiting/sleeping
+    resourceAccess.V();
+  } while (!IsTimeout(timeout_ms));  // or other option for waiting/sleeping
+  return Tuple{0};
 }
 
 void Linda::ZeroTuple_(Tuple *t) { t->size = 0; }
@@ -57,31 +59,31 @@ Tuple Linda::Read(TupleDesc describe, unsigned int timeout_ms) {
   Tuple ret;
   bool find = false;
 
-  do{
-    serviceQueue.p();
-    readCountAccess.p();
-    if(readCount.equalZero())
-      resourceAccess.p();
-    readCount.v();
-    serviceQueue.v();
-    readCountAccess.v();
+  StartTimer();
+  do {
+    serviceQueue.P();
+    readCountAccess.P();
+    if (readCount.isZero()) resourceAccess.P();
+    readCount.V();
+    serviceQueue.V();
+    readCountAccess.V();
 
     t = Find_(describe);
 
-    if(t != nullptr){
+    if (t != nullptr) {
       ret = *t;
       find = true;
     }
 
-    readCountAccess.p();
-    readCount.p();
-    if(readCount.equalZero())
-      resourceAccess.v();
-    readCountAccess.v();
+    readCountAccess.P();
+    readCount.P();
+    if (readCount.isZero()) resourceAccess.V();
+    readCountAccess.V();
 
-    if(find)
-      return ret;
-  } while (sleep(1));  // or other option for waiting/sleeping
+    if (find) return ret;
+  } while (!IsTimeout(timeout_ms));  // or other option for waiting/sleeping
+
+  return Tuple{0};
 }
 
 Tuple *Linda::Find_(const TupleDesc &td) {
@@ -94,6 +96,18 @@ Tuple *Linda::Find_(const TupleDesc &td) {
     }
   }
   return nullptr;  // did not find
+}
+
+void Linda::StartTimer() {
+  start_time_point = std::chrono::system_clock::now();
+}
+
+bool Linda::IsTimeout(unsigned int timeout_ms) {
+  auto timeout = std::chrono::milliseconds(timeout_ms);
+  auto now = std::chrono::system_clock::now();
+  auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+      now - start_time_point);
+  return duration_ms > timeout;
 }
 
 }  // namespace uxp

@@ -3,22 +3,18 @@
 #ifndef SRC_LINDA_H_
 #define SRC_LINDA_H_
 
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
-#include <string>
 #include <cstring>
+#include <string>
 
 #include "src/memory_chunk.h"
-#include "src/type.h"
+#include "src/semaphore.h"
 #include "src/tuple.h"
+#include "src/type.h"
 
 namespace uxp {
-
-struct Semaphore{ // TODO remove it when we prepare our implementation of semaphores
-  void p(){};
-  void v(){};
-  bool equalZero(){};
-};
 
 class Linda {
  public:
@@ -30,13 +26,19 @@ class Linda {
   } CREATE{};
 
   // Create empty object.
-  Linda() : mc_() {}
+  Linda()
+      : mc_(),
+        serviceQueue(0),
+        resourceAccess(1),
+        readCountAccess(2),
+        readCount(3) {}
 
   // Link existing memory.
-  explicit Linda(const char *path) : mc_(path) {}
+  explicit Linda(const char *path) : Linda() { mc_.Attach(path); }
 
   // Create new memory.
-  explicit Linda(const char *path, CREATE_t) : mc_(path, MEM_SIZE) {
+  explicit Linda(const char *path, CREATE_t) : Linda() {
+    mc_.AttachNew(path, MEM_SIZE);
     if (IsOpen()) {
       memset(mc_.GetMem(), '\0', mc_.GetSize());
     }
@@ -44,6 +46,8 @@ class Linda {
 
   int Attach(const char *path) { return mc_.Attach(path); }
   int AttachNew(const char *path) {
+    for (auto sem : {serviceQueue, resourceAccess, readCountAccess, readCount})
+      sem.initialize(1);
     int result = mc_.AttachNew(path, MEM_SIZE);
     if (result >= 0) {
       memset(mc_.GetMem(), '\0', mc_.GetSize());
@@ -70,8 +74,12 @@ class Linda {
   }
   Tuple *Find_(const TupleDesc &describe);
 
+  void StartTimer();
+  bool IsTimeout(unsigned int timeout_ms);
+
   MemoryChunk mc_;
-  Semaphore serviceQueue, resourceAccess, readCountAccess, readCount; //TODO reimplement by using our semaphores
+  Semaphore serviceQueue, resourceAccess, readCountAccess, readCount;
+  std::chrono::system_clock::time_point start_time_point;
 };
 
 }  // namespace uxp
