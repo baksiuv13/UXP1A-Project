@@ -29,27 +29,13 @@ struct Element {
   explicit Element(int32_t i) : type(Type::INT), value{.int_ = i} {}
   explicit Element(float f) : type(Type::FLOAT), value{.float_ = f} {}
   explicit Element(const char *s) : type(Type::STRING) {
-    size_t i;
-    char c;
-    for (i = 0; i < MAX_STRING_SIZE - 1 && (c = s[i]) != '\0'; ++i) {
-      value.string_[i] = c;
-    }
-    value.string_[i] = '\0';
-    str_size = i;
+    str_size = WriteString(s);
   }
 
-  std::string ToString() {
-    switch (type) {
-      case Type::INT:
-        return std::to_string(value.int_);
-      case Type::FLOAT:
-        return std::to_string(value.float_);
-      case Type::STRING:
-        return std::string(value.string_);
-      default:
-        return "ERROR";
-    }
-  }
+  std::string ToString();
+
+ private:
+  size_t WriteString(const char *s);
 };
 
 struct ElementDesc {
@@ -75,20 +61,16 @@ struct ElementDesc {
       : type(Type::INT), condition(cnd), value{.int_ = i} {}
   explicit ElementDesc(float f, Condition cnd)
       : type(Type::FLOAT), condition(cnd), value{.float_ = f} {}
-  explicit ElementDesc(const char *s, Condition cnd) : type(Type::STRING) {
-    condition = cnd;
-    if (cnd == ANY) return;
-    size_t i;
-    char c;
-    for (i = 0; i < MAX_STRING_SIZE - 1 && (c = s[i]) != '\0'; ++i) {
-      value.string_[i] = c;
-    }
-    value.string_[i] = '\0';
-    str_size = i;
+  explicit ElementDesc(const char *s, Condition cnd)
+      : type(Type::STRING), condition(cnd) {
+    if (cnd != ANY) str_size = WriteString(s);
   }
+
+ private:
+  size_t WriteString(const char *s);
 };
 
-bool ChkElem(const Element *, const ElementDesc *);
+bool CheckElement(const Element *, const ElementDesc *);
 
 }  // namespace uxp
 

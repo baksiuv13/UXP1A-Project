@@ -1,38 +1,36 @@
 // Copyright 2019 UXP1A Students Team
 
 #include "src/linda.h"
-#include <zconf.h>
-#include <cassert>
 
 namespace uxp {
 
-void Linda::Output(Tuple tuple) {
-  // [TODO] empty tuple
+int Linda::AttachNew(const char *path) {
+  for (auto sem : {serviceQueue, resourceAccess, readCountAccess, readCount})
+    sem.initialize(1);
+  int result = mc_.AttachNew(path, MEM_SIZE);
+  mc_.ZeroMemory();
+  return result;
+}
 
-  // Only for debug;
+bool Linda::Output(Tuple tuple) {
   serviceQueue.P();
   resourceAccess.P();
   serviceQueue.V();
-  // Tuple *tuples = &TupleAt_(0);
 
-  size_t i;
-  for (i = 0; i < TUPLES_NUMBER; ++i) {
+  for (size_t i = 0; i < TUPLES_NUMBER; ++i) {
     Tuple *t = &TupleAt_(i);
-    if (t->size != 0) {
-      continue;
-    }
+    if (t->size != 0) continue;
+
     *t = tuple;
     resourceAccess.V();
-    return;
+    return true;
   }
   resourceAccess.V();
-  // We did not find empty place. We should wait??
-  assert(((void)&Linda::Output, 0));  // Temporary solution.
+  return false;
 }
 
 Tuple Linda::Input(TupleDesc describe, unsigned int timeout_ms) {
   Tuple *t;
-
   StartTimer();
   do {
     serviceQueue.P();
@@ -48,16 +46,14 @@ Tuple Linda::Input(TupleDesc describe, unsigned int timeout_ms) {
       return ret;
     }
     resourceAccess.V();
-  } while (!IsTimeout(timeout_ms));  // or other option for waiting/sleeping
+  } while (!IsTimeout(timeout_ms));
   return Tuple{0};
 }
-
-void Linda::ZeroTuple_(Tuple *t) { t->size = 0; }
 
 Tuple Linda::Read(TupleDesc describe, unsigned int timeout_ms) {
   Tuple *t;
   Tuple ret;
-  bool find = false;
+  bool found = false;
 
   StartTimer();
   do {
@@ -69,10 +65,9 @@ Tuple Linda::Read(TupleDesc describe, unsigned int timeout_ms) {
     readCountAccess.V();
 
     t = Find_(describe);
-
     if (t != nullptr) {
       ret = *t;
-      find = true;
+      found = true;
     }
 
     readCountAccess.P();
@@ -80,22 +75,17 @@ Tuple Linda::Read(TupleDesc describe, unsigned int timeout_ms) {
     if (readCount.isZero()) resourceAccess.V();
     readCountAccess.V();
 
-    if (find) return ret;
-  } while (!IsTimeout(timeout_ms));  // or other option for waiting/sleeping
-
+    if (found) return ret;
+  } while (!IsTimeout(timeout_ms));
   return Tuple{0};
 }
 
 Tuple *Linda::Find_(const TupleDesc &td) {
-  // [TODO] empty tuple desc
-  size_t i;
-  for (i = 0; i < TUPLES_NUMBER; ++i) {
+  for (size_t i = 0; i < TUPLES_NUMBER; ++i) {
     Tuple *t = &TupleAt_(i);
-    if (ChkTuple(t, &td)) {
-      return t;
-    }
+    if (CheckTuple(t, &td)) return t;
   }
-  return nullptr;  // did not find
+  return nullptr;
 }
 
 void Linda::StartTimer() {

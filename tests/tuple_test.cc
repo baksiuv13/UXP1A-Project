@@ -18,11 +18,9 @@ using uxp::ElemType;
 using uxp::Tuple;
 using uxp::TupleDesc;
 
-bool Chk(const Element &e, const ElementDesc &ed) {
-  return uxp::ChkElem(&e, &ed);
+bool Chk(const Tuple &t, const TupleDesc &td) {
+  return uxp::CheckTuple(&t, &td);
 }
-
-bool Chk(const Tuple &t, const TupleDesc &td) { return uxp::ChkTuple(&t, &td); }
 
 BOOST_AUTO_TEST_CASE(check_int_less_str_any) {
   Tuple t;
