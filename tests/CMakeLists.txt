@@ -4,7 +4,7 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 
 add_executable(element_test.out
-  element_test.cpp
+  element_test.cc
   "${SOURCES_src}"
 )
 target_link_libraries(element_test.out
@@ -12,7 +12,7 @@ target_link_libraries(element_test.out
 )
 
 add_executable(tuple_test.out
-  tuple_test.cpp
+  tuple_test.cc
   "${SOURCES_src}"
 )
 target_link_libraries(tuple_test.out
