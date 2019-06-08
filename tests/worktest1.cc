@@ -10,32 +10,20 @@
 #include <cstring>
 #include <iostream>
 
-#include "src/linda.h"
+#include "src/memory_chunk.h"
 
-static constexpr const char *filename = "./shm-test-file";
-
-using uxp::Linda;
-using uxp::ElemType;
-using uxp::Element;
-using uxp::ElementDesc;
-using uxp::Tuple;
-using uxp::TupleDesc;
-using Condition = ElementDesc::Condition;
+static constexpr const char *filename = "./tests-shmem";
 
 int jeden() {
-  Linda linda;
-  linda.AttachNew(filename);
-  if (!linda.IsOpen()) {
+  uxp::MemoryChunk mc;
+  mc.AttachNew(filename, 100);
+  if (!mc.IsOpen()) {
     std::cerr << "jeden: Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
     std::cerr << strerror(errno) << '\n';
-    return -10;
+    return -666;
   }
-  Tuple t;
-  t.size = 3;
-  t.elements[0] = Element(5);
-  t.elements[1] = Element("haha");
-  t.elements[2] = Element(9.6f);
-  linda.Output(t);
+  memset(mc.GetMem(), '6', 99);
+  mc[99] = '\0';
   std::cerr << "jeden: wpisane już\n";
   int xd;
   wait(&xd);
@@ -45,21 +33,14 @@ int jeden() {
 int dwa() {
   sleep(5);
   std::cerr << "dwa: ok, spróbuję to przeczytać\n";
-  Linda linda;
-  linda.Attach(filename);
-  if (!linda.IsOpen()) {
+  uxp::MemoryChunk mc;
+  mc.Attach(filename);
+  if (!mc.IsOpen()) {
     std::cerr << "dwa: Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
     std::cerr << strerror(errno) << '\n';
     return -667;
   }
-  TupleDesc t;
-  t.size = 3;
-  t.elements[0] = ElementDesc(5, Condition::EQUAL);
-  t.elements[1] = ElementDesc("hehehe", Condition::LESS_EQ);
-  t.elements[2] = ElementDesc(10.0f, Condition::LESS);
-  std::cerr << "wpisane, szukanko\n";
-  Tuple tuple = linda.Input(t, 0);
-  std::cerr << "Ok, coś mam " << tuple.size << "\n";
+  std::cerr << &mc[0] << '\n';
   return 0;
 }
 
@@ -79,6 +60,4 @@ int main(int argc, char **argv, char **env) {
   std::cerr << getpid() << '\n';
 
   return inne(argc, argv, env);
-
-  return 0;
 }

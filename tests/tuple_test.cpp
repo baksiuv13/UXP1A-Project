@@ -22,19 +22,33 @@ bool Chk(const Element &e, const ElementDesc &ed) {
   return uxp::ChkElem(&e, &ed);
 }
 
-bool Chk(const Tuple &t, const TupleDesc &td) {
-  return uxp::ChkTuple(&t, &td);
-}
+bool Chk(const Tuple &t, const TupleDesc &td) { return uxp::ChkTuple(&t, &td); }
 
-BOOST_AUTO_TEST_CASE(int_is_not_float) {
+BOOST_AUTO_TEST_CASE(check_int_less_str_any) {
   Tuple t;
-  TupleDesc td;
   t.size = 2;
-  td.size = 2;
   t.elements[0] = Element(5);
-  td.elements[0] = ElementDesc(6, Condition::LESS_EQ);
   t.elements[1] = Element("pizza");
+  TupleDesc td;
+  td.size = 2;
+  td.elements[0] = ElementDesc(6, Condition::LESS_EQ);
   td.elements[1] = ElementDesc("spaghetti", Condition::ANY);
+
   BOOST_CHECK(Chk(t, td));
 }
 
+BOOST_AUTO_TEST_CASE(check_int_equal_str_greater_float_less) {
+  Tuple t;
+  t.size = 3;
+  t.elements[0] = Element(5);
+  t.elements[1] = Element("haha");
+  t.elements[2] = Element(9.6f);
+
+  TupleDesc td;
+  td.size = 3;
+  td.elements[0] = ElementDesc(5, Condition::EQUAL);
+  td.elements[1] = ElementDesc("chehehe", Condition::GREATER_EQ);
+  td.elements[2] = ElementDesc(10.0f, Condition::LESS);
+
+  BOOST_CHECK(Chk(t, td));
+}

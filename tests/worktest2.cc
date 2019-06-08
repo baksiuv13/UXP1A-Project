@@ -10,20 +10,32 @@
 #include <cstring>
 #include <iostream>
 
-#include "src/memory_chunk.h"
+#include "src/linda.h"
 
-static constexpr const char *filename = "./shm-test-file";
+static constexpr const char *filename = "./tests-shmem";
+
+using uxp::Linda;
+using uxp::ElemType;
+using uxp::Element;
+using uxp::ElementDesc;
+using uxp::Tuple;
+using uxp::TupleDesc;
+using Condition = ElementDesc::Condition;
 
 int jeden() {
-  uxp::MemoryChunk mc;
-  mc.AttachNew(filename, 100);
-  if (!mc.IsOpen()) {
+  Linda linda;
+  linda.AttachNew(filename);
+  if (!linda.IsOpen()) {
     std::cerr << "jeden: Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
     std::cerr << strerror(errno) << '\n';
-    return -666;
+    return -10;
   }
-  memset(mc.GetMem(), '6', 99);
-  mc[99] = '\0';
+  Tuple t;
+  t.size = 3;
+  t.elements[0] = Element(5);
+  t.elements[1] = Element("haha");
+  t.elements[2] = Element(9.6f);
+  linda.Output(t);
   std::cerr << "jeden: wpisane już\n";
   int xd;
   wait(&xd);
@@ -33,14 +45,21 @@ int jeden() {
 int dwa() {
   sleep(5);
   std::cerr << "dwa: ok, spróbuję to przeczytać\n";
-  uxp::MemoryChunk mc;
-  mc.Attach(filename);
-  if (!mc.IsOpen()) {
+  Linda linda;
+  linda.Attach(filename);
+  if (!linda.IsOpen()) {
     std::cerr << "dwa: Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
     std::cerr << strerror(errno) << '\n';
     return -667;
   }
-  std::cerr << &mc[0] << '\n';
+  TupleDesc t;
+  t.size = 3;
+  t.elements[0] = ElementDesc(5, Condition::EQUAL);
+  t.elements[1] = ElementDesc("hehehe", Condition::LESS_EQ);
+  t.elements[2] = ElementDesc(10.0f, Condition::LESS);
+  std::cerr << "wpisane, szukanko\n";
+  Tuple tuple = linda.Input(t, 0);
+  std::cerr << "Ok, coś mam " << tuple.size << "\n";
   return 0;
 }
 
@@ -59,24 +78,5 @@ int inne(int argc, char **argv, char **env) {
 int main(int argc, char **argv, char **env) {
   std::cerr << getpid() << '\n';
 
-  if (1 || argc > 1) {
-    return inne(argc, argv, env);
-  }
-
-  uxp::MemoryChunk mc;
-
-  mc.AttachNew(filename, 666);
-
-  if (!mc.IsOpen()) {
-    std::cerr << "Nie otwarło nam pamięci :<, coś jest  źle :<<\n";
-    std::cerr << strerror(errno) << '\n';
-    return -666;
-  }
-
-  memset(mc.GetMem(), 'x', 665);
-  reinterpret_cast<char *>(mc.GetMem())[665] = '\0';
-
-  std::cerr << reinterpret_cast<char *>(mc.GetMem());
-
-  return 0;
+  return inne(argc, argv, env);
 }
