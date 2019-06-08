@@ -13,30 +13,38 @@ const char LindaCli::help_text[] =
     "* read <size:int> <timeout_sec:int> {<type:i|f|s> "
     "<cmp:==|<|<=|>|>=|*> [<value:int|float|string>]}\n\n"
     "When you declare tuple pattern, don't set value for *. Examples:\n"
-    " output 4 i 1 s abc f 3.1415 s d \n ->  output for tuple (1, "
+    " output 4 i 1 s abc f 3.1415 s d \n -> output for tuple (1, "
     "\"abc\", 3.1415, \"d\")\n"
     " input 4 10 i == 1 s * f >= 3 s == d \n -> input for tuple "
     "(integer:1, string:*, float:>=3, string:\"d\"), timeout 10 seconds\n"
-    "Ctrl^C to close program.\n";
+    "Ctrl^C or Ctrl^D to close program.\n";
 
-void LindaCli::Run() {
-  std::string command = "";
-  std::cin >> command;
-  try {
-    if (command == "help")
-      Help();
-    else if (command == "output")
-      Output();
-    else if (command == "input")
-      Input();
-    else if (command == "read")
-      Read();
-    else if (command != "")
-      std::cout << "# Unknown command. See 'help'" << std::endl;
-  } catch (std::runtime_error e) {
-    std::cout << "# Invalid execute: " << e.what() << std::endl;
-    // ClearStdinLine();
+void LindaCli::Run(std::atomic_bool *stop) {
+  while (!*stop) {
+    std::string command = "";
+    std::cout << "$ ";
+    std::cout.flush();
+    std::cin >> command;
+    if (std::cin.eof()) {
+      break;
+    }
+    try {
+      if (command == "help")
+        Help();
+      else if (command == "output")
+        Output();
+      else if (command == "input")
+        Input();
+      else if (command == "read")
+        Read();
+      else if (command != "")
+        std::cout << "# Unknown command. See 'help'" << std::endl;
+    } catch (std::runtime_error &e) {
+      std::cout << "# Invalid execute: " << e.what() << std::endl;
+      ClearStdinLine();
+    }
   }
+  std::cout << "\n# Quit\n";
 }
 
 template <>
@@ -130,7 +138,7 @@ void LindaCli::Input() {
   std::cout << "> Input: wait for find tuple..." << std::endl;
   auto result = linda->Input(tuple, timeout * 1000);
   if (result.size == 0)
-    std::cout << "# Timeout expired.";
+    std::cout << "# Timeout expired.\n";
   else
     std::cout << "> Found: " << result.ToString() << std::endl;
 }
@@ -147,7 +155,7 @@ void LindaCli::Read() {
   std::cout << "> Read: wait for find tuple..." << std::endl;
   auto result = linda->Read(tuple, timeout * 1000);
   if (result.size == 0)
-    std::cout << "# Timeout expired.";
+    std::cout << "# Timeout expired." << std::endl;
   else
     std::cout << "> Found: " << result.ToString() << std::endl;
 }
@@ -156,6 +164,7 @@ void LindaCli::ClearStdinLine() {
   int c;
   while ((c = std::cin.get()) != '\n' && c != EOF) {
   }
+  std::cin.clear();
 }
 
 }  // namespace client

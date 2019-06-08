@@ -5,14 +5,17 @@
 
 #include <iostream>
 #include <string>
+#include <atomic>
 
 #include "src/linda.h"
 
 namespace client {
 class LindaCli {
  public:
+  LindaCli() = delete;
   explicit LindaCli(uxp::Linda *linda) : linda(linda) {}
-  void Run();
+  LindaCli(const LindaCli &) = delete;
+  void Run(std::atomic_bool *stop);
   void Help();
 
  private:

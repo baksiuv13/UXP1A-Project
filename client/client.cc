@@ -8,9 +8,9 @@
 #include "client/lindacli.h"
 #include "src/linda.h"
 
-bool run = true;
+std::atomic_bool stop {false};
 
-void handler(int s) { run = false; }
+void handler(int s) { stop = true; }
 void attach_signal_handler() {
   struct sigaction sigIntHandler;
 
@@ -23,7 +23,7 @@ void attach_signal_handler() {
 
 int main(int argc, char **argv, char **env) {
   if (argc < 2) {
-    std::cout << "Need a sharedmemory file as arg";
+    std::cerr << "Need a shared memory file as arg\n";
     return -1;
   }
 
@@ -44,6 +44,6 @@ int main(int argc, char **argv, char **env) {
   client::LindaCli cli(&linda);
 
   cli.Help();
-  while (run) cli.Run();
+  cli.Run(&stop);
   return 0;
 }

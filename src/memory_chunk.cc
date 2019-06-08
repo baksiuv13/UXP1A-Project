@@ -165,9 +165,18 @@ void MemoryChunk::Close_() {
       // naszą pamięć.
       int res = 0;
       res = semctl(sem_id_, 0, IPC_RMID);
+      if (res < 0) {
+        std::cerr << "Błąd oznaczania semafora od pamięci do usinięcia: " <<
+          std::strerror(errno);
+      }
       res = shmctl(shm_id_, IPC_RMID, nullptr);
+      if (res < 0) {
+        std::cerr << "Błąd oznaczania pamięci do usinięcia: " <<
+          std::strerror(errno);
+      }
     } else {
-      std::cerr << "Błąd:" << std::strerror(errno) << '\n';
+      std::cerr << "Błąd opuszczania semafora od pamięci:" <<
+        std::strerror(errno) << '\n';
     }
   }
   state_ = BLANK;
