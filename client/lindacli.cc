@@ -13,30 +13,38 @@ const char LindaCli::help_text[] =
     "* read <size:int> <timeout_sec:int> {<type:i|f|s> "
     "<cmp:==|<|<=|>|>=|*> [<value:int|float|string>]}\n\n"
     "When you declare tuple pattern, don't set value for *. Examples:\n"
-    " output 4 i 1 s abc f 3.1415 s d \n ->  output for tuple (1, "
+    " output 4 i 1 s abc f 3.1415 s d \n -> output for tuple (1, "
     "\"abc\", 3.1415, \"d\")\n"
     " input 4 10 i == 1 s * f >= 3 s == d \n -> input for tuple "
     "(integer:1, string:*, float:>=3, string:\"d\"), timeout 10 seconds\n"
-    "Ctrl^C to close program.\n";
+    "Ctrl^C or Ctrl^D to close program.\n";
 
-void LindaCli::Run() {
-  std::string command = "";
-  std::cin >> command;
-  try {
-    if (command == "help")
-      Help();
-    else if (command == "output")
-      Output();
-    else if (command == "input")
-      Input();
-    else if (command == "read")
-      Read();
-    else if (command != "")
-      std::cout << "# Unknown command. See 'help'" << std::endl;
-  } catch (std::runtime_error e) {
-    std::cout << "# Invalid execute: " << e.what() << std::endl;
-    // ClearStdinLine();
+void LindaCli::Run(std::atomic_bool *stop) {
+  while (!*stop) {
+    std::string command = "";
+    std::cout << "$ ";
+    std::cout.flush();
+    std::cin >> command;
+    if (std::cin.eof()) {
+      break;
+    }
+    try {
+      if (command == "help")
+        Help();
+      else if (command == "output")
+        Output();
+      else if (command == "input")
+        Input();
+      else if (command == "read")
+        Read();
+      else if (command != "")
+        std::cout << "# Unknown command. See 'help'" << '\n';
+    } catch (std::runtime_error &e) {
+      std::cout << "# Invalid execute: " << e.what() << '\n';
+      ClearStdinLine();
+    }
   }
+  std::cout << "\n# Quit\n";
 }
 
 template <>
@@ -50,7 +58,7 @@ uxp::Element LindaCli::ParseElement<uxp::Element>() {
   } else if (type == "s") {
     return uxp::Element(GetVal<std::string>().c_str());
   } else {
-    std::cout << "Element type '" + type + " is invalid" << std::endl;
+    std::cout << "Element type '" + type + " is invalid\n";
     throw std::runtime_error("Invalid type");
   }
 }
@@ -67,7 +75,7 @@ uxp::ElementDesc LindaCli::ParseElement<uxp::ElementDesc>() {
   } else if (type == "s") {
     return uxp::ElementDesc(GetVal<std::string>(condition).c_str(), condition);
   } else {
-    std::cout << "Element type '" + type + " is invalid" << std::endl;
+    std::cout << "Element type '" + type + " is invalid\n";
     throw std::runtime_error("Invalid type");
   }
 }
@@ -119,7 +127,7 @@ void LindaCli::Output() {
   std::cin >> size;
   auto tuple = ParseTuple<uxp::Tuple, uxp::Element>(size);
   linda->Output(tuple);
-  std::cout << "> Output for " << tuple.ToString() << std::endl;
+  std::cout << "> Output for " << tuple.ToString() << '\n';
 }
 
 void LindaCli::Input() {
@@ -127,12 +135,12 @@ void LindaCli::Input() {
   int timeout;
   std::cin >> size >> timeout;
   auto tuple = ParseTuple<uxp::TupleDesc, uxp::ElementDesc>(size);
-  std::cout << "> Input: wait for find tuple..." << std::endl;
+  std::cout << "> Input: wait for find tuple..." << '\n';
   auto result = linda->Input(tuple, timeout * 1000);
   if (result.size == 0)
-    std::cout << "# Timeout expired.";
+    std::cout << "# Timeout expired.\n";
   else
-    std::cout << "> Found: " << result.ToString() << std::endl;
+    std::cout << "> Found: " << result.ToString() << '\n';
 }
 
 void LindaCli::Read() {
@@ -144,18 +152,19 @@ void LindaCli::Read() {
     std::cout << "# Invalid tuple.";
     return;
   }
-  std::cout << "> Read: wait for find tuple..." << std::endl;
+  std::cout << "> Read: wait for find tuple...\n";
   auto result = linda->Read(tuple, timeout * 1000);
   if (result.size == 0)
-    std::cout << "# Timeout expired.";
+    std::cout << "# Timeout expired.\n";
   else
-    std::cout << "> Found: " << result.ToString() << std::endl;
+    std::cout << "> Found: " << result.ToString() << '\n';
 }
 
 void LindaCli::ClearStdinLine() {
   int c;
   while ((c = std::cin.get()) != '\n' && c != EOF) {
   }
+  std::cin.clear();
 }
 
 }  // namespace client
