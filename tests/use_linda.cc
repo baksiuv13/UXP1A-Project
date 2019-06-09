@@ -23,7 +23,7 @@ int first() {
 }
 
 int second() {
-  sleep(5);  // time for first() to create memory
+  sleep(2);  // time for first() to create memory
   uxp::Linda linda(filename);
   uxp::TupleDesc pattern{
       3,
@@ -34,10 +34,16 @@ int second() {
   int second_10 = 10 * 1000;  // 10 sec in ms
   auto read = linda.Read(pattern, second_10);
   assert(read.size == 3);
+  std::cout << read.ToString() << "\n";
+
   auto input = linda.Input(pattern, second_10);
   assert(input.size == 3);
+  std::cout << input.ToString() << "\n";
+
   auto notfound = linda.Input(pattern, 1000);
   assert(notfound.size == 0);
+  std::cout << notfound.ToString() << "\n";
+
   return 0;
 }
 
