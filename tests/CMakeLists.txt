@@ -28,7 +28,13 @@ target_link_libraries(semaphore_test.out
 )
 
 
+add_executable(use_linda.out
+  use_linda.cc
+  "${SOURCES_src}"
+)
+
 add_test(Element element_test.out)
 add_test(Tuple tuple_test.out)
 add_test(Semaphore semaphore_test.out)
+add_test(Example_use_linda use_linda.out)
 
