@@ -3,8 +3,8 @@
 #ifndef SRC_SEMAPHORE_H_
 #define SRC_SEMAPHORE_H_
 
-#include <sys/sem.h>
 #include <pthread.h>
+#include <sys/sem.h>
 #include <iostream>
 
 namespace uxp {
@@ -24,15 +24,10 @@ class Semaphore {
   // global semaphore identifier
   static const int32_t SEM_ID;
 
-  static bool P(const uint16_t semNum);
-  static bool V(const uint16_t semNum);
   static bool initializeAll(const int32_t value);
-  static bool initialize(const uint16_t semNum, const int32_t value);
-  static int32_t getValue(const uint16_t semNum);
-  static bool isZero(const uint16_t semNum);
   static bool closeSemTable();
 
-  explicit Semaphore(const uint16_t semNum);
+  explicit Semaphore(const uint16_t semNum) : semNum(semNum) {}
 
   bool P();
   bool V();

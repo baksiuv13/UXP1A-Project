@@ -16,7 +16,7 @@ using Condition = ElementDesc::Condition;
 using uxp::ElemType;
 
 bool Chk(const Element &e, const ElementDesc &ed) {
-  return uxp::ChkElem(&e, &ed);
+  return uxp::CheckElement(&e, &ed);
 }
 
 BOOST_AUTO_TEST_CASE(int_is_not_float) {
