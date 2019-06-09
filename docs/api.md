@@ -73,12 +73,16 @@ korzystające z biblioteki mogą odczytywać ich wartości z podanych lokalizacj
 | Maksymalna liczba elementów w krotce       | 100     | Stała `MAX_TUPLE_SIZE` w `src/tuple.h`    |
 | Maksymalna długość stringa w elemencie     | 100     | Stała `MAX_STRING_SIZE` w `src/element.h` |
 
+Dodatkowo, krotka o rozmiarze 0 wykorzystana jest jako reprezentacja nieznalezienia
+krotki, nie jest zatem możliwe poprawne zapisanie jej ani odczytanie.
+
 ### Możliwe wyjątki, błędy, obsługa ograniczeń
 
 TODO:
 * Błąd inicjalizacji/podłączenia pamięci lub semaforów
 * Pamięć zapełniona
 * Zbyt długi string
+* Próba wstawienia krotki o rozm. 0
 
 ### Przykład
 
