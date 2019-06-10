@@ -51,6 +51,8 @@ _Tab. 2. Zestawienie pól dla `Tuple` oraz `TupleDesc`_
 | `ElementDesc::Condition condition` | _brak_              | Sposób dopasowania     | `ANY` (dowolna wartość),<br> `LESS` (`<`),<br> `GREATER` (`>`),<br> `LESS_EQ` (`<=`),<br> `GREATER_EQ` (`>=`),<br> `EQUAL` (`==`) |
 _Tab. 3. Zestawienie pól dla `Element` oraz `ElementDesc`_
 
+W przypadku dopasowania typu `*` (`ANY`), zawartość pola `value` nie ma znaczenia.
+
 ### Inicjalizacja
 Konstruktor klasy przyjmuje ścieżkę do pliku, która będzie podstawą wygenerowania
 klucza dla wywołań systemowych. Wszystkie instancje mające być połączone w jeden
@@ -95,12 +97,14 @@ Możiwe komunikaty błędów:
 * _Could not detach memory block_
 * _Could not remove memory block_
   
-W przypadku błędnej konfiguracji ograniczeń, możliwe są także następujące
-błądy dotyczące obsługi pamięci:
+W przypadku zmiany wewnętrznej konfiguracji klas lub ograniceń, możliwe są 
+także następujące błądy dotyczące obsługi pamięci:
 * _Size cannot be 0_ (wyjątek `std::invalid_argument`) - rozmiar współdzielonej
   pamięci musi być większy niż 0
 * _Too large argument._ (wyjątek `std::out_of_range`) - próba odczytu ponad
   krotki za współdzieloną pamięcią
+* _Bad semaphore number_ (wyjątek `std::out_of_range`) próba dostępu do 
+  niezaalokowanego semafora
 
 Dodatkowo do komunikatów mogą być dołączone szczegółowe informacje o błędzie
 zwrócone przez system. 
