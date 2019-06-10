@@ -4,13 +4,6 @@
 
 namespace uxp {
 
-int Linda::AttachNew(const char *path) {
-  for (auto sem : {serviceQueue, resourceAccess, readCountAccess, readCount})
-    sem.initialize(1);
-  int result = mc_.AttachNew(path, MEM_SIZE);
-  mc_.ZeroMemory();
-  return result;
-}
 
 bool Linda::Output(Tuple tuple) {
   serviceQueue.P();

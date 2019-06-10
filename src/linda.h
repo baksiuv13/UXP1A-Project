@@ -23,28 +23,17 @@ class Linda {
 
   using Type = ElemType;
 
-  static constexpr struct CREATE_t {
-  } CREATE{};
-
-  // Create empty object.
-  Linda()
-      : mc_(),
+ public:
+  // Link existing memory.
+  Linda() = delete;
+  explicit Linda(const char *path) 
+      : mc_(path, MEM_SIZE),
         serviceQueue(0),
         resourceAccess(1),
         readCountAccess(2),
-        readCount(3) {}
-
-  // Link existing memory.
-  explicit Linda(const char *path) : Linda() { Attach(path); }
-
-  // Create new memory.
-  explicit Linda(const char *path, CREATE_t) : Linda() { AttachNew(path); }
-
-  int Attach(const char *path) { return mc_.Attach(path); }
-  int AttachNew(const char *path);
-  void Detach() { return mc_.Detach(); }
-
-  bool IsOpen() { return mc_.IsOpen(); }
+        readCount(3) {
+    mc_.ZeroMemory();
+  }
 
   bool Output(Tuple tuple);
   Tuple Input(TupleDesc describe, unsigned int timeout_ms);
@@ -57,7 +46,7 @@ class Linda {
   static void ZeroTuple_(Tuple *tuple) { tuple->size = 0; }
 
   Tuple &TupleAt_(size_t n) {
-    return reinterpret_cast<Tuple *>(&mc_[TUPLES_START])[n];
+    return reinterpret_cast<Tuple *>(&mc_.at(TUPLES_START))[n];
   }
   Tuple *Find_(const TupleDesc &describe);
 

@@ -26,24 +26,19 @@ int main(int argc, char **argv, char **env) {
     std::cerr << "Need a shared memory file as arg\n";
     return -1;
   }
+  attach_signal_handler();
+  try {
+    uxp::Linda linda(argv[1]);
 
-  uxp::Linda linda;
-  if (argc > 2 && strcmp(argv[2], "-c") == 0)
-    linda.AttachNew(argv[1]);
-  else
-    linda.Attach(argv[1]);
+    client::LindaCli cli(&linda);
 
-  if (linda.IsOpen()) {
-    std::cout << "Linda is ready with shm: " << argv[1] << '\n';
-  } else {
-    std::cerr << "Unable to open Linda for shm " << argv[1] << '\n';
+    cli.Help();
+    cli.Run(&stop);
+    return 0;
+
+  } catch(std::runtime_error &e) {
+    // std::cerr << "Unable to open Linda for shm " << argv[1] << '\n';
+    std::cerr << e.what() << '\n';
     return -1;
   }
-
-  attach_signal_handler();
-  client::LindaCli cli(&linda);
-
-  cli.Help();
-  cli.Run(&stop);
-  return 0;
 }

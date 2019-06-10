@@ -27,19 +27,8 @@ target_link_libraries(semaphore_test.out
   ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 )
 
-add_executable(worktest1.out
-  worktest1.cc
-  "${SOURCES_src}"
-)
-
-add_executable(worktest2.out
-  worktest2.cc
-  "${SOURCES_src}"
-)
 
 add_test(Element element_test.out)
 add_test(Tuple tuple_test.out)
 add_test(Semaphore semaphore_test.out)
-add_test(Open_shared_memory worktest1.out)
-add_test(Find_tuple worktest2.out)
 
