@@ -42,12 +42,9 @@ class MemoryChunk {
 
  private:
   static constexpr int SHM_PROJ_ID = 1;
-  // static constexpr int SEM_PROJ_ID = 2;
-
 
   void AttachMem_(const char *path, size_t size);
   void CloseMem_();
-  // int UseSysSemaphores_(const char *path, int number, int flag);
   int UseSysShmMemory_(const char *path, size_t size, int flag);
   int ReadShmSize_();
 
