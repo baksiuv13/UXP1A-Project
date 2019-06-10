@@ -2,8 +2,8 @@
 
 Interfejs dostępy jest poprzez klasę *Linda* z przestrzeni nazw `uxp` zadeklarowaną
 w pliku `src/linda.h`. Obiekty tej klasy udostępniają  podstawowe operacje zgodnie
-z językiem Linda oraz dodatkowe metody i konstruktory pozwalające na stworzenie
-i podłączenie się do współdzielonej pamięci. 
+z językiem Linda, zaś podczas tworzenia i niszczenia obiektów odbywa się zarządzanie
+współdzieloną pamięcią.
 
 ### Realizacja operacji Linda
 
@@ -34,8 +34,8 @@ to odpowidnio struktury `TupleDesc` oraz `ElementDesc`, zawierające dodatkowe
 informacje o sposobie dopasowania.
 
 Struktury `Tuple` oraz `Element` udostępniają metdę `ToString()` przedstawiającą
-ich zawartość jako `std::string`, w formacie listy wartości wewnątrz okrągłych
-nawiasów, np. `(1, 2.0, "c")`.
+ich zawartość jako `std::string`. Dla elementu jest to reprezentacja jego zawartości,
+dla krotki format to lista elementów wewnątrz okrągłych nawiasów, np. `(1, 2.0, "c")`.
 
 | Pole struktury              | Opis dla `Tuple`  | Opis dla `TupleDesc`               |
 | --------------------------- | ----------------- | ---------------------------------- |
@@ -57,11 +57,11 @@ klucza dla wywołań systemowych. Wszystkie instancje mające być połączone w
 komunikujący się system, muszą odwoływać się do jednego pliku. Plik musi istnieć
 i być dostępny.
 
-Specyfiokacja konstruktora: `Linda(const char *path)`
+Specyfikacja konstruktora: `Linda(const char *path)`
 
-Taki sam efekt można uzyskać wywołując najpierw pusty konstruktor, a następnie
-metodą `int Attach(const char *path)`.  
-^^^^^^ chciałbym zostawić tylko konstruktor, jeśli Piotrkowi uda się to zunifikować
+Konstruktor spróbuje podłączyć się do istniejącego zestawu semaforów i współdzielonej
+pamięci, a w przypadku ich braku - utworzy je. Ostatni niszczony obiekt zwolni
+zaalokowane zasoby.
 
 ### Ograniczenia implementacyjne
 Następujące parametry systemu zostały ustalone podczas implementacji. Programy
@@ -76,13 +76,31 @@ korzystające z biblioteki mogą odczytywać ich wartości z podanych lokalizacj
 Dodatkowo, krotka o rozmiarze 0 wykorzystana jest jako reprezentacja nieznalezienia
 krotki, nie jest zatem możliwe poprawne zapisanie jej ani odczytanie.
 
-### Możliwe wyjątki, błędy, obsługa ograniczeń
+### Możliwe wyjątki i obsługa ograniczeń
 
-TODO:
-* Błąd inicjalizacji/podłączenia pamięci lub semaforów
-* Pamięć zapełniona
-* Zbyt długi string
-* Próba wstawienia krotki o rozm. 0
+W przypadku błędów związanych z inicjalizacją pamięci lub semaforów, wygenerowany
+zostanie wyjątek `std::runtime_error` wraz z odpowiednim
+komunikatem, błędy podczas niszczenia obiektu zostaną zapisane na standardowe
+wyjście błędów. String o długości większej niż 100 znaków (wliczając `\0`), zostanie
+obcięty do dozwolonego rozmiaru.
+
+Możiwe komunikaty błędów:
+* _Could not get shm\_key_
+* _Could not create or attach shared memory block_
+* _Could not read info about memory block_
+* _Could not attach memory block_
+* _Could not detach memory block_
+* _Could not remove memory block_
+  
+W przypadku błędnej konfiguracji ograniczeń, możliwe są także następujące
+błądy dotyczące obsługi pamięci:
+* _Size cannot be 0_ (wyjątek `std::invalid_argument`) - rozmiar współdzielonej
+  pamięci musi być większy niż 0
+* _Too large argument._ (wyjątek `std::out_of_range`) - próba odczytu ponad
+  krotki za współdzieloną pamięcią
+
+Dodatkowo do komunikatów mogą być dołączone szczegółowe informacje o błędzie
+zwrócone przez system. 
 
 ### Przykład
 
