@@ -40,5 +40,8 @@ int main(int argc, char **argv, char **env) {
     // std::cerr << "Unable to open Linda for shm " << argv[1] << '\n';
     std::cerr << e.what() << '\n';
     return -1;
+  } catch(std::out_of_range &e) {
+    std::cerr << e.what() << '\n';
+    return -1;
   }
 }

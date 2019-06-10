@@ -32,7 +32,12 @@ class Linda {
         resourceAccess(1),
         readCountAccess(2),
         readCount(3) {
-    mc_.ZeroMemory();
+    if (mc_.NewlyCreated()) {
+      mc_.ZeroMemory();
+      for (auto sem :
+          {serviceQueue, resourceAccess, readCountAccess, readCount})
+        sem.initialize(1);
+    }
   }
 
   bool Output(Tuple tuple);

@@ -45,8 +45,6 @@ class MemoryChunk {
 
   void AttachMem_(const char *path, size_t size);
   void CloseMem_();
-  int UseSysShmMemory_(const char *path, size_t size, int flag);
-  int ReadShmSize_();
 
   int shm_id_;
   key_t key_;
