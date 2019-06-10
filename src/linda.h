@@ -26,7 +26,7 @@ class Linda {
  public:
   // Link existing memory.
   Linda() = delete;
-  explicit Linda(const char *path) 
+  explicit Linda(const char *path)
       : mc_(path, MEM_SIZE),
         serviceQueue(0),
         resourceAccess(1),
@@ -35,7 +35,7 @@ class Linda {
     if (mc_.NewlyCreated()) {
       mc_.ZeroMemory();
       for (auto sem :
-          {serviceQueue, resourceAccess, readCountAccess, readCount})
+           {serviceQueue, resourceAccess, readCountAccess, readCount})
         sem.initialize(1);
     }
   }

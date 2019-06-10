@@ -4,7 +4,6 @@
 
 namespace uxp {
 
-
 bool Linda::Output(Tuple tuple) {
   serviceQueue.P();
   resourceAccess.P();

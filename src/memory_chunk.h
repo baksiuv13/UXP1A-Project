@@ -15,11 +15,8 @@ class MemoryChunk {
   MemoryChunk() = delete;
 
   // Attach to memory pointed by file.
-  explicit MemoryChunk(const char *path, size_t size) :
-      shm_id_(0),
-      key_(0),
-      address_(nullptr),
-      size_(0) {
+  explicit MemoryChunk(const char *path, size_t size)
+      : shm_id_(0), key_(0), address_(nullptr), size_(0) {
     AttachMem_(path, size);
   }
 
