@@ -11,28 +11,14 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "src/error.h"
+
 namespace uxp {
 
 namespace {
 
 static constexpr int create_mem_flag = IPC_CREAT | IPC_EXCL | 0660;
 static constexpr int open_existing_mem_flag = 0660;
-
-static std::string EXCEPTION_MSG(const char *msg) {
-  int e = errno;
-  errno = 0;
-  return std::string(msg) + ":\n\t" + std::strerror(e) + '\n';
-}
-
-static void ERROR_PRINT(const char *msg) {
-  std::cerr << EXCEPTION_MSG(msg);
-  errno = 0;
-}
-
-template <typename T>
-static void Throw(const char *msg) {
-  throw T(EXCEPTION_MSG(msg));
-}
 
 }  // namespace
 

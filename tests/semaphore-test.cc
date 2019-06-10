@@ -31,9 +31,4 @@ BOOST_AUTO_TEST_CASE(test_semaphore_flow) {
   BOOST_TEST(sem.GetValue() == 0);
   BOOST_TEST(sem.IsZero() == true);
 
-  /* now this is impossible to check this way
-  bool close_result = uxp::Semaphore::closeSemTable();
-  BOOST_TEST(close_result == true);
-  BOOST_TEST(sem.getValue() == -1);
-  */
 }
