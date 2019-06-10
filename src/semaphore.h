@@ -13,12 +13,14 @@ class Semaphore;
 
 class SemaphoreTable {
   friend class Semaphore;
+
  public:
   static constexpr int N_SEMS = 13;
   SemaphoreTable() = delete;
   SemaphoreTable(const SemaphoreTable &) = delete;
   SemaphoreTable(const char *path);
   ~SemaphoreTable();
+
  private:
   static constexpr int SEM_PROJ_ID = 13;
 
@@ -36,7 +38,8 @@ class SemaphoreTable {
 
 class Semaphore {
  public:
-  explicit Semaphore(SemaphoreTable *tab, unsigned short num) : sem_tab_(tab), sem_num_(num) {}
+  explicit Semaphore(SemaphoreTable *tab, unsigned short num)
+      : sem_tab_(tab), sem_num_(num) {}
 
   bool P() { return sem_tab_->P_(sem_num_); }
   bool V() { return sem_tab_->V_(sem_num_); }

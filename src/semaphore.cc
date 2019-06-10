@@ -8,7 +8,7 @@ namespace uxp {
 
 namespace {
 
-static int sem_flag = IPC_CREAT | 0666; // Maybe 0660 ??
+static int sem_flag = IPC_CREAT | 0666;  // Maybe 0660 ??
 
 static std::string EXCEPTION_MSG(const char *msg) {
   int e = errno;
