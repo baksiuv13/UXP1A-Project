@@ -11,8 +11,8 @@
 #include "src/semaphore.h"
 
 BOOST_AUTO_TEST_CASE(test_semaphore_flow) {
-  uxp::SemaphoreTable semtab("semkeypath");
-  uxp::Semaphore sem(&semtab, 0);
+  uxp::SemaphoreTable semtab("./tests-shmem");
+  uxp::Semaphore sem(&semtab, 1);
   sem.Initialize(2);
 
   BOOST_TEST(sem.GetValue() == 2);

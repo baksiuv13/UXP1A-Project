@@ -11,19 +11,17 @@
 
 static constexpr const char *filename = "./tests-shmem";
 
-int first() {
-  uxp::Linda linda(filename, uxp::Linda::CREATE);
+void first() {
+  uxp::Linda linda(filename);
   uxp::Tuple tuple{3,
                    {uxp::Element(3.0f), uxp::Element(1), uxp::Element("aaa")}};
   assert(linda.Output(tuple) == true);
 
   int res;
   wait(&res);
-  return 0;
 }
 
-int second() {
-  sleep(2);  // time for first() to create memory
+void second() {
   uxp::Linda linda(filename);
   uxp::TupleDesc pattern{
       3,
@@ -43,8 +41,6 @@ int second() {
   auto notfound = linda.Input(pattern, 1000);
   assert(notfound.size == 0);
   std::cout << notfound.ToString() << "\n";
-
-  return 0;
 }
 
 int main(int argc, char **argv, char **env) {
@@ -52,8 +48,9 @@ int main(int argc, char **argv, char **env) {
   if (forked < 0) {
     return -1;
   } else if (forked > 0) {
-    return first();
+    first();
   } else {
-    return second();
+    second();
   }
+  return 0;
 }
