@@ -3,9 +3,9 @@
 #ifndef CLIENT_LINDCLI_H_
 #define CLIENT_LINDCLI_H_
 
+#include <atomic>
 #include <iostream>
 #include <string>
-#include <atomic>
 
 #include "src/linda.h"
 

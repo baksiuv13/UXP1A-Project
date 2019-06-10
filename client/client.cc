@@ -8,7 +8,7 @@
 #include "client/lindacli.h"
 #include "src/linda.h"
 
-std::atomic_bool stop {false};
+std::atomic_bool stop{false};
 
 void handler(int s) { stop = true; }
 void attach_signal_handler() {
@@ -36,11 +36,11 @@ int main(int argc, char **argv, char **env) {
     cli.Run(&stop);
     return 0;
 
-  } catch(std::runtime_error &e) {
+  } catch (std::runtime_error &e) {
     // std::cerr << "Unable to open Linda for shm " << argv[1] << '\n';
     std::cerr << e.what() << '\n';
     return -1;
-  } catch(std::out_of_range &e) {
+  } catch (std::out_of_range &e) {
     std::cerr << e.what() << '\n';
     return -1;
   }
