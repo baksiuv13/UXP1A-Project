@@ -33,7 +33,8 @@ SemaphoreTable::SemaphoreTable(const char *path) {
   if (key_ < 0) Throw<std::runtime_error>("Could not get sem_key");
   semid_ = semget(key_, N_SEMS, sem_flag);
   if (semid_ < 0) Throw<std::runtime_error>("Could not open sem table");
-  InitializeAll_(1);
+  bool init_res = InitializeAll_(1);
+  if (!init_res) Throw<std::runtime_error>("Could not initialize semaphores");
 }
 
 SemaphoreTable::~SemaphoreTable() {
@@ -43,7 +44,9 @@ SemaphoreTable::~SemaphoreTable() {
 }
 
 bool SemaphoreTable::InitializeAll_(int value) {
-  int rc = semctl(semid_, 0, SETALL, value);
+  ushort vals[N_SEMS];
+  for (size_t i = 0; i < N_SEMS; ++i) vals[i] = value;
+  int rc = semctl(semid_, 0, SETALL, &vals);
   return !(rc < 0);
 }
 
