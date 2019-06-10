@@ -11,26 +11,24 @@
 #include "src/semaphore.h"
 
 BOOST_AUTO_TEST_CASE(test_semaphore_flow) {
-  uxp::Semaphore sem = uxp::Semaphore(0);
-  sem.initialize(2);
+  uxp::SemaphoreTable semtab("semkeypath");
+  uxp::Semaphore sem(&semtab, 0);
+  sem.Initialize(2);
 
-  BOOST_TEST(sem.getValue() == 2);
-
-  sem.P();
-  BOOST_TEST(sem.getValue() == 1);
+  BOOST_TEST(sem.GetValue() == 2);
 
   sem.P();
-  BOOST_TEST(sem.getValue() == 0);
+  BOOST_TEST(sem.GetValue() == 1);
+
+  sem.P();
+  BOOST_TEST(sem.GetValue() == 0);
 
   sem.V();
-  BOOST_TEST(sem.getValue() == 1);
-  BOOST_TEST(sem.isZero() == false);
+  BOOST_TEST(sem.GetValue() == 1);
+  BOOST_TEST(sem.IsZero() == false);
 
   sem.P();
-  BOOST_TEST(sem.getValue() == 0);
-  BOOST_TEST(sem.isZero() == true);
+  BOOST_TEST(sem.GetValue() == 0);
+  BOOST_TEST(sem.IsZero() == true);
 
-  bool close_result = uxp::Semaphore::closeSemTable();
-  BOOST_TEST(close_result == true);
-  BOOST_TEST(sem.getValue() == -1);
 }

@@ -9,18 +9,18 @@
 #include <cstring>
 #include <exception>
 
+#include "src/lock_guard.h"
+#include "src/semaphore.h"
+
 namespace uxp {
 class MemoryChunk {
  public:
   MemoryChunk() = delete;
 
   // Attach to memory pointed by file.
-  explicit MemoryChunk(const char *path, size_t size)
-      : shm_id_(0),
-        key_(0),
-        address_(nullptr),
-        size_(0),
-        newly_created_(false) {
+  explicit MemoryChunk(const char *path, size_t size, Semaphore *s)
+      : shm_id_(0), key_(0), address_(nullptr), size_(0), semaphore_(s) {
+    LockGuard<Semaphore> guard(*s);
     AttachMem_(path, size);
   }
 
@@ -31,12 +31,14 @@ class MemoryChunk {
   MemoryChunk(MemoryChunk &&) = delete;
   MemoryChunk &operator=(MemoryChunk &&) = delete;
 
-  ~MemoryChunk() { CloseMem_(); }
+  ~MemoryChunk() {
+    LockGuard<Semaphore> guard(*semaphore_);
+    CloseMem_();
+  }
 
   void *GetMem() { return address_; }
   size_t GetSize() const { return size_; }
   void ZeroMemory() { memset(address_, '\0', size_); }
-  bool NewlyCreated() { return newly_created_; }
 
   // Get i byte of shared memory.
   char &at(size_t i);
@@ -51,7 +53,7 @@ class MemoryChunk {
   key_t key_;
   void *address_;
   size_t size_;
-  bool newly_created_;
+  Semaphore *semaphore_;
 };
 }  // namespace uxp
 

@@ -6,7 +6,7 @@ if [ -f "$ipc_file" ] ; then true ;
 else echo "${ipc_file} is not a file" ; exit 1 ; fi ;
 
 proj_id_shm=1
-proj_id_sem=2
+proj_id_sem=13
 
 dev=`stat --format=%d $ipc_file`
 ino=`stat --format=%i $ipc_file`

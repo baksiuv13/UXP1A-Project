@@ -27,18 +27,13 @@ class Linda {
   // Link existing memory.
   Linda() = delete;
   explicit Linda(const char *path)
-      : mc_(path, MEM_SIZE),
-        serviceQueue(0),
-        resourceAccess(1),
-        readCountAccess(2),
-        readCount(3) {
-    if (mc_.NewlyCreated()) {
-      mc_.ZeroMemory();
-      for (auto sem :
-           {serviceQueue, resourceAccess, readCountAccess, readCount})
-        sem.initialize(1);
-    }
-  }
+      : sem_tab_(path),
+        serviceQueue(&sem_tab_, 0),
+        resourceAccess(&sem_tab_, 1),
+        readCountAccess(&sem_tab_, 3),
+        readCount(&sem_tab_, 4),
+        memorySem(&sem_tab_, 5),
+        mc_(path, MEM_SIZE, &memorySem) {}
 
   bool Output(Tuple tuple);
   Tuple Input(TupleDesc describe, unsigned int timeout_ms);
@@ -58,8 +53,9 @@ class Linda {
   void StartTimer();
   bool IsTimeout(unsigned int timeout_ms);
 
+  SemaphoreTable sem_tab_;
+  Semaphore serviceQueue, resourceAccess, readCountAccess, readCount, memorySem;
   MemoryChunk mc_;
-  Semaphore serviceQueue, resourceAccess, readCountAccess, readCount;
   std::chrono::system_clock::time_point start_time_point;
 };
 

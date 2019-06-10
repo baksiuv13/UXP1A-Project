@@ -9,31 +9,47 @@
 
 namespace uxp {
 
-class Semaphore {
- private:
-  const uint16_t semNum;
+class Semaphore;
+
+class SemaphoreTable {
+  friend class Semaphore;
 
  public:
-  // constants for ftok()
-  static const char SEM_KEY_PATH[];
-  static const int32_t SEM_KEY_PROJ_ID;
+  static constexpr int N_SEMS = 13;
+  SemaphoreTable() = delete;
+  SemaphoreTable(const SemaphoreTable &) = delete;
+  SemaphoreTable(const char *path);
+  ~SemaphoreTable();
 
-  static const int32_t N_SEMS;
+ private:
+  static constexpr int SEM_PROJ_ID = 13;
 
-  static const key_t SEM_KEY;
-  // global semaphore identifier
-  static const int32_t SEM_ID;
+  bool P_(unsigned short n);
+  bool V_(unsigned short n);
+  int GetValue_(unsigned short n);
+  bool IsZero_(unsigned short n) { return GetValue_(n) == 0; }
+  bool InitializeOne_(unsigned short sem, int value);
+  bool InitializeAll_(int value);
+  bool CloseSemTable_();
 
-  static bool initializeAll(const int32_t value);
-  static bool closeSemTable();
+  key_t key_;
+  int semid_;
+};
 
-  explicit Semaphore(const uint16_t semNum) : semNum(semNum) {}
+class Semaphore {
+ public:
+  explicit Semaphore(SemaphoreTable *tab, unsigned short num)
+      : sem_tab_(tab), sem_num_(num) {}
 
-  bool P();
-  bool V();
-  bool initialize(const int32_t value);
-  int32_t getValue();
-  bool isZero();
+  bool P() { return sem_tab_->P_(sem_num_); }
+  bool V() { return sem_tab_->V_(sem_num_); }
+  int GetValue() { return sem_tab_->GetValue_(sem_num_); }
+  bool IsZero() { return sem_tab_->IsZero_(sem_num_); }
+  bool Initialize(int val) { return sem_tab_->InitializeOne_(sem_num_, val); }
+
+ private:
+  SemaphoreTable *sem_tab_;
+  unsigned short sem_num_;
 };
 
 }  // namespace uxp
