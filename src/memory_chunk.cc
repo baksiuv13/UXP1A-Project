@@ -37,13 +37,14 @@ static void Throw(const char *msg) {
 }  // namespace
 
 void MemoryChunk::AttachMem_(const char *path, size_t size) {
+  bool newly_created = false;
   if (size <= 0) throw std::invalid_argument("Size cannot be 0");
   key_ = ftok(path, SHM_PROJ_ID);
   if (key_ < 0) Throw<std::runtime_error>("Could not get shm_key");
   shm_id_ = shmget(key_, 0, open_existing_mem_flag);
   if (shm_id_ < 0 && errno == ENOENT) {
     shm_id_ = shmget(key_, size, create_mem_flag);
-    newly_created_ = true && shm_id_ >= 0;
+    newly_created = true && shm_id_ >= 0;
   }
   if (shm_id_ < 0) {
     Throw<std::runtime_error>("Could not create or attach shared memory block");
@@ -56,9 +57,10 @@ void MemoryChunk::AttachMem_(const char *path, size_t size) {
   size_ = shmds.shm_segsz;
   address_ = shmat(shm_id_, nullptr, 0);
   if (address_ == reinterpret_cast<void *>(-1)) {
-    if (newly_created_) shmctl(shm_id_, IPC_RMID, nullptr);
+    if (newly_created) shmctl(shm_id_, IPC_RMID, nullptr);
     Throw<std::runtime_error>("Could not attach memory block");
   }
+  if (newly_created) ZeroMemory();
 }
 
 void MemoryChunk::CloseMem_() {

@@ -10,4 +10,5 @@ set(SOURCES
   "${CMAKE_CURRENT_SOURCE_DIR}/element.cc"
   "${CMAKE_CURRENT_SOURCE_DIR}/semaphore.h"
   "${CMAKE_CURRENT_SOURCE_DIR}/semaphore.cc"
+  "${CMAKE_CURRENT_SOURCE_DIR}/lock_guard.h"
 )
