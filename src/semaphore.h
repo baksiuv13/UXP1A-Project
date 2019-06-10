@@ -29,7 +29,7 @@ class SemaphoreTable {
   int GetValue_(unsigned short n);
   bool IsZero_(unsigned short n) { return GetValue_(n) == 0; }
   bool InitializeOne_(unsigned short sem, int value);
-  bool InitializeAll_(int value);
+  bool InitializeAll_();
   bool CloseSemTable_();
 
   key_t key_;
@@ -38,8 +38,7 @@ class SemaphoreTable {
 
 class Semaphore {
  public:
-  explicit Semaphore(SemaphoreTable *tab, unsigned short num)
-      : sem_tab_(tab), sem_num_(num) {}
+  explicit Semaphore(SemaphoreTable *tab, unsigned short num);
 
   bool P() { return sem_tab_->P_(sem_num_); }
   bool V() { return sem_tab_->V_(sem_num_); }
@@ -48,6 +47,10 @@ class Semaphore {
   bool Initialize(int val) { return sem_tab_->InitializeOne_(sem_num_, val); }
 
  private:
+  bool ValidNum_(unsigned short n) {
+    return n >= 1 && n < SemaphoreTable::N_SEMS;
+  }
+
   SemaphoreTable *sem_tab_;
   unsigned short sem_num_;
 };

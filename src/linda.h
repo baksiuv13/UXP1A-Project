@@ -28,8 +28,8 @@ class Linda {
   Linda() = delete;
   explicit Linda(const char *path)
       : sem_tab_(path),
-        serviceQueue(&sem_tab_, 0),
-        resourceAccess(&sem_tab_, 1),
+        serviceQueue(&sem_tab_, 1),
+        resourceAccess(&sem_tab_, 2),
         readCountAccess(&sem_tab_, 3),
         readCount(&sem_tab_, 4),
         memorySem(&sem_tab_, 5),
