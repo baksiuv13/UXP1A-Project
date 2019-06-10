@@ -83,9 +83,6 @@ void MemoryChunk::CloseMem_() {
     if (rem_res < 0)
       ERROR_PRINT("Could not remove memory block");
   }
-  if (dt_res < 0 || stat_res < 0 || rem_res < 0) {
-    std::terminate();
-  }
 }
 
 char &MemoryChunk::at(size_t i) {
