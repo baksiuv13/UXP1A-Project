@@ -51,7 +51,7 @@ Tuple Linda::Read(TupleDesc describe, unsigned int timeout_ms) {
   do {
     serviceQueue.P();
     readCountAccess.P();
-    if (readCount.isZero()) resourceAccess.P();
+    if (readCount.IsZero()) resourceAccess.P();
     readCount.V();
     serviceQueue.V();
     readCountAccess.V();
@@ -64,7 +64,7 @@ Tuple Linda::Read(TupleDesc describe, unsigned int timeout_ms) {
 
     readCountAccess.P();
     readCount.P();
-    if (readCount.isZero()) resourceAccess.V();
+    if (readCount.IsZero()) resourceAccess.V();
     readCountAccess.V();
 
     if (found) return ret;
