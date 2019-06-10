@@ -23,20 +23,22 @@ SemaphoreTable::SemaphoreTable(const char *path) {
   int res = semctl(semid_, 0, IPC_STAT, &sem);
   if (res < 0) Throw<std::runtime_error>("Could not get stat of sem table");
   if (sem.sem_otime == 0) {
-    bool init_res = InitializeAll_(1);
+    bool init_res = InitializeAll_();
     if (!init_res) Throw<std::runtime_error>("Could not initialize semaphores");
   }
+  V_(0);  // Add ONE to counting semaphore.
 }
 
 SemaphoreTable::~SemaphoreTable() {
-  CloseSemTable_();
-  // It has to be changed somehow.
-  // We can't delete table in every process.
+  P_(0);  // Subtract ONE from counting semaphore.
+  if (IsZero_(0))
+    CloseSemTable_();
 }
 
-bool SemaphoreTable::InitializeAll_(int value) {
+bool SemaphoreTable::InitializeAll_() {
   ushort vals[N_SEMS];
-  for (size_t i = 0; i < N_SEMS; ++i) vals[i] = value;
+  vals[0] = 0;
+  for (size_t i = 1; i < N_SEMS; ++i) vals[i] = 1;
   int rc = semctl(semid_, 0, SETALL, &vals);
   return !(rc < 0);
 }
@@ -73,6 +75,11 @@ bool SemaphoreTable::InitializeOne_(unsigned short semNum, int value) {
 
 int SemaphoreTable::GetValue_(unsigned short semNum) {
   return semctl(semid_, semNum, GETVAL);
+}
+
+Semaphore::Semaphore(SemaphoreTable *tab, unsigned short num)
+    : sem_tab_(tab), sem_num_(num) {
+  if (!ValidNum_(num)) Throw<std::out_of_range>("Bad semaphore number");
 }
 
 }  // namespace uxp
