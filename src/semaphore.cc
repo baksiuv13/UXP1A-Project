@@ -33,8 +33,13 @@ SemaphoreTable::SemaphoreTable(const char *path) {
   if (key_ < 0) Throw<std::runtime_error>("Could not get sem_key");
   semid_ = semget(key_, N_SEMS, sem_flag);
   if (semid_ < 0) Throw<std::runtime_error>("Could not open sem table");
-  bool init_res = InitializeAll_(1);
-  if (!init_res) Throw<std::runtime_error>("Could not initialize semaphores");
+  struct semid_ds sem;
+  int res = semctl(semid_, 0, IPC_STAT, &sem);
+  if (res < 0) Throw<std::runtime_error>("Could not get stat of sem table");
+  if (sem.sem_otime == 0) {
+    bool init_res = InitializeAll_(1);
+    if (!init_res) Throw<std::runtime_error>("Could not initialize semaphores");
+  }
 }
 
 SemaphoreTable::~SemaphoreTable() {
