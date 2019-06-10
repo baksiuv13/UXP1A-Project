@@ -85,6 +85,9 @@ wyjście błędów. String o długości większej niż 100 znaków (wliczając `
 obcięty do dozwolonego rozmiaru.
 
 Możiwe komunikaty błędów:
+* _Could not get sem\_key_
+* _Could not open sem table_
+* _Could not initialize semaphores_
 * _Could not get shm\_key_
 * _Could not create or attach shared memory block_
 * _Could not read info about memory block_
