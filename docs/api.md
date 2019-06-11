@@ -12,6 +12,7 @@ współdzieloną pamięcią.
 | output(krotka)          | `bool Output(Tuple tuple)`                                 |
 | input(wzorzec, timeout) | `Tuple Input(TupleDesc describe, unsigned int timeout_ms)` |
 | read(wzorzec, timeout)  | `Tuple Read(TupleDesc describe, unsigned int timeout_ms)`  |
+
 _Tab. 1. Zestawienie operacji w języku Linda i deklaracji realizujących je metod_
 
 1. Operacja **output**: metoda przyjmuje jako parametr strukturę reprezentującą
@@ -42,6 +43,7 @@ dla krotki format to lista elementów wewnątrz okrągłych nawiasów, np. `(1, 
 | `size_t size`               | Liczba elementów  | Oczekiwana długość, liczba wzorców |
 | `Element elements[...]`     | Tablica elementów | _brak_                             |
 | `ElementDesc elements[...]` | _brak_            | Tablica wzorców elementów          |
+
 _Tab. 2. Zestawienie pól dla `Tuple` oraz `TupleDesc`_
 
 | Pole struktury                     | Opis dla `Element`  | Opis dla `ElementDesc` | Możliwe wartości                                                                                                                  |
@@ -49,6 +51,7 @@ _Tab. 2. Zestawienie pól dla `Tuple` oraz `TupleDesc`_
 | `ElemType type`                    | Typ elementu (enum) | Typ elementu (enum)    | `INT`, `FLOAT`, `STRING`                                                                                                          |
 | `union {...} value`                | Wartość elementu    | Wzorzec do porównania  | `int32_t int_` <br> `float float_` <br> `char string_[...]` <br> - zgodnie z typem elementu                                       |
 | `ElementDesc::Condition condition` | _brak_              | Sposób dopasowania     | `ANY` (dowolna wartość),<br> `LESS` (`<`),<br> `GREATER` (`>`),<br> `LESS_EQ` (`<=`),<br> `GREATER_EQ` (`>=`),<br> `EQUAL` (`==`) |
+
 _Tab. 3. Zestawienie pól dla `Element` oraz `ElementDesc`_
 
 W przypadku dopasowania typu `*` (`ANY`), zawartość pola `value` nie ma znaczenia.

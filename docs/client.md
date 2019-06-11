@@ -27,6 +27,7 @@ w którym mogą się one komunikować. Wyłaczenie klienta następuje sekwencją
 ### Obsługa klienta
 
 ![Widok klienta po uruchomieniu](images/client.png)
+
 _Rys. 1. Klient po uruchomieniu_
 
 Klient dostarcza interaktywnej sesji obsługującej kilka komend:
@@ -61,6 +62,7 @@ porównania jest różny od `*`).
 | `2 5 f > 2 s < d`               | 5 sek.  | 2 elementy     | `(float:>2, string:<"d")`                      |
 
 Oznaczenia typów w składni:
+
 | symbol | typ     |
 | ------ | ------- |
 | i      | integer |
