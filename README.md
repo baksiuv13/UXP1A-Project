@@ -12,12 +12,9 @@ This generate `client.out` file (CLI client to test Linda library) and test exec
 
 ## How to use client
 To use `client.out`, at first argument set path to
-shared memory-key file; if process is first and should
-create this memory, set second argument to `-c`. For example:
+shared memory-key file. For example:
 
-    ./client.out shm-test-file -c
-
-Only first client need `-c` flag.
+    ./client.out shm-test-file
 
 When running, following commands are possible:
 
